@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-ink: #080808;
+  --color-ink2: #121212;
+  --color-ink3: #1a1a1a;
+  --color-cream: #fcfaf7;
+  --color-cream2: #f5f0e8;
+  --color-cream3: #ede4d8;
+  --color-green: #143d28;
+  --color-green-h: #0d2b1c;
+  --color-green-lt: #f0f7f3;
+  --color-green-mid: #246342;
+  --color-accent: #d4ff5e;
+  --color-accent-h: #c2f045;
+  
+  --shadow-bdr: 0 0 0 1px rgba(8, 8, 8, 0.06);
+  --shadow-bdr-d: 0 0 0 1px rgba(8, 8, 8, 0.12);
+  --shadow-glow: 0 0 20px rgba(212, 255, 94, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-cream text-ink font-sans antialiased selection:bg-accent selection:text-ink;
+  }
+  
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-blink {
+  animation: blink 2s infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5;
+}
+
