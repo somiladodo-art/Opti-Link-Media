@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import Chatbot from './components/Chatbot';
+import { Character3D } from './components/Character3D';
 
 // --- Components ---
 
@@ -323,43 +324,9 @@ export default function App() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="hidden lg:block relative h-[600px]"
+            className="hidden lg:block relative h-[600px] w-full flex items-center justify-center"
           >
-            <svg className="w-full h-full" viewBox="0 0 480 520">
-              <circle cx="250" cy="260" r="200" fill="rgba(31,77,50,0.05)" />
-              
-              {/* Animated Cards (Simplified SVG components for React) */}
-              <motion.g animate={{ y: [0, -8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} transform="translate(22,30)">
-                <rect width="210" height="165" rx="18" fill="white" className="shadow-sm" stroke="#e5ddd2" strokeWidth="1.5" />
-                <rect width="210" height="44" rx="18" fill="#f7f3ed" />
-                <text x="16" y="27" fontSize="9.5" fontWeight="700" fill="#6b7280" className="font-sans tracking-widest uppercase">Monthly Revenue</text>
-                <text x="16" y="62" fontSize="23" fontWeight="900" fill="#0d0d0d" className="font-sans tracking-tighter">R 42,800</text>
-                <text x="16" y="76" fontSize="8" fill="#1f4d32" fontWeight="600" className="font-sans">+218% from last month</text>
-                <polyline points="16,130 40,118 64,124 88,106 112,112 136,95 160,100 184,86 206,82" fill="none" stroke="#1f4d32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </motion.g>
-
-              <motion.g animate={{ y: [0, -8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }} transform="translate(200,110)">
-                <rect width="150" height="52" rx="26" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1.5" />
-                <text x="22" y="19" fontSize="7.5" fontWeight="700" fill="#92400e" className="font-sans tracking-widest uppercase">Cashback Activated</text>
-                <text x="22" y="37" fontSize="18" fontWeight="900" fill="#78350f" className="font-sans">5% back</text>
-              </motion.g>
-
-              <motion.g animate={{ y: [0, -8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 4 }} transform="translate(288,60)">
-                <rect width="162" height="205" rx="16" fill="white" stroke="#e5ddd2" strokeWidth="1.5" />
-                <rect width="162" height="40" rx="16" fill="#f0f9f4" />
-                <circle cx="22" cy="20" r="9" fill="#25d166" />
-                <text x="36" y="16" fontSize="8.5" fontWeight="700" fill="#0d0d0d" className="font-sans">WhatsApp</text>
-                <rect x="10" y="50" width="108" height="28" rx="9" fill="#f0f9f4" />
-                <text x="18" y="62" fontSize="7.5" fill="#0d0d0d" className="font-sans">Hi! Your order</text>
-                <text x="18" y="72" fontSize="7.5" fill="#0d0d0d" className="font-sans">is confirmed ✓</text>
-              </motion.g>
-
-              <motion.g animate={{ y: [0, -8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} transform="translate(60,210)">
-                <rect width="250" height="152" rx="20" fill="#1f4d32" />
-                <text x="18" y="108" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.6)" className="font-mono tracking-[0.3em]">5249 5949 3059 3057</text>
-                <text x="18" y="127" fontSize="8" fill="rgba(255,255,255,0.4)" className="font-sans uppercase tracking-widest">Valid Thru 05/28</text>
-              </motion.g>
-            </svg>
+            <Character3D />
           </motion.div>
         </div>
       </section>
@@ -676,14 +643,14 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="p-10">
+                  <div className="p-12">
                     {surveyStep === 1 && (
-                      <div className="space-y-8">
+                      <div className="space-y-10">
                         <div>
-                          <h3 className="text-2xl font-black text-ink tracking-tight mb-2">What type of business do you run?</h3>
-                          <p className="text-sm text-gray-lt">This helps us tailor your personalised quick-win plan.</p>
+                          <h3 className="text-3xl font-black text-ink tracking-tight mb-3">What type of business do you run?</h3>
+                          <p className="text-base text-gray">This helps us tailor your personalised quick-win plan.</p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 gap-4">
                           {[
                             { val: 'ecom', title: 'Ecommerce / Online Store', sub: 'I sell products online or want to start', icon: <ShoppingCart /> },
                             { val: 'retail', title: 'Retail / Physical Store', sub: 'Brick & mortar, want to go online', icon: <Store /> },
