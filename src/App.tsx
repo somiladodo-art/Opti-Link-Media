@@ -31,11 +31,16 @@ import {
   HelpCircle, 
   Hourglass, 
   ClipboardCheck, 
-  Loader2
+  Loader2,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import Chatbot from './components/Chatbot';
 import { Character3D } from './components/Character3D';
+import Auth from './components/Auth';
+import Dashboard from './components/Dashboard';
+import SolutionPage from './components/SolutionPage';
+import { SphereLogo3D } from './components/SphereLogo3D';
 
 // --- Components ---
 
@@ -101,13 +106,19 @@ const Logo = ({ className, dark = false }: { className?: string, dark?: boolean 
 
 const Section = ({ children, className, id, dark = false, alt = false }: { children: React.ReactNode, className?: string, id?: string, dark?: boolean, alt?: boolean }) => (
   <section id={id} className={cn(
-    "py-24 px-6",
+    "py-24 md:py-32 px-6",
     dark ? "bg-ink2 text-white" : alt ? "bg-white" : "bg-cream",
     className
   )}>
-    <div className="max-w-7xl mx-auto">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="max-w-7xl mx-auto"
+    >
       {children}
-    </div>
+    </motion.div>
   </section>
 );
 
@@ -117,15 +128,15 @@ const Eyebrow = ({ children, centered = false }: { children: React.ReactNode, ce
     centered ? "justify-center" : ""
   )}>
     {!centered && <div className="w-5 h-[1.5px] bg-green rounded-full" />}
-    <span className="text-[0.7rem] font-bold text-green uppercase tracking-[0.2em]">
-      {children}
+    <span className="font-mono text-[10px] font-bold text-green uppercase tracking-[0.3em]">
+      [{children}]
     </span>
   </div>
 );
 
 const Heading = ({ children, className, centered = false }: { children: React.ReactNode, className?: string, centered?: boolean }) => (
   <h2 className={cn(
-    "text-4xl md:text-5xl font-black text-ink tracking-tight leading-[1.15] mb-6",
+    "text-4xl md:text-5xl lg:text-6xl font-black text-ink tracking-tight leading-[1.1] mb-6",
     centered ? "text-center" : "",
     className
   )}>
@@ -135,7 +146,7 @@ const Heading = ({ children, className, centered = false }: { children: React.Re
 
 const Subheading = ({ children, className, centered = false }: { children: React.ReactNode, className?: string, centered?: boolean }) => (
   <p className={cn(
-    "text-lg text-gray max-w-xl leading-relaxed",
+    "text-lg md:text-xl text-gray max-w-2xl leading-relaxed",
     centered ? "text-center mx-auto" : "",
     className
   )}>
@@ -143,9 +154,99 @@ const Subheading = ({ children, className, centered = false }: { children: React
   </p>
 );
 
+const RevenueCalculator = () => {
+  const [visitors, setVisitors] = useState(1000);
+  const [conversion, setConversion] = useState(1.5);
+  const [aov, setAov] = useState(500);
+
+  const currentRevenue = visitors * (conversion / 100) * aov;
+  const optiLinkConversion = Math.min(conversion + 2.5, 10);
+  const potentialRevenue = visitors * (optiLinkConversion / 100) * aov;
+  const lostRevenue = potentialRevenue - currentRevenue;
+
+  return (
+    <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-bdr-d relative overflow-hidden my-20">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-green-lt rounded-full blur-[80px] opacity-50 pointer-events-none" />
+      
+      <div className="grid lg:grid-cols-2 gap-12 relative z-10">
+        <div>
+          <div className="inline-flex items-center gap-2.5 bg-green-lt border border-green/20 rounded-full px-3 py-1 mb-4">
+            <BarChart3 size={12} className="text-green" />
+            <span className="text-[0.65rem] font-bold text-green uppercase tracking-wider">Free ROI Tool</span>
+          </div>
+          <h3 className="text-3xl font-black text-ink tracking-tight mb-2">Revenue Leakage Calculator</h3>
+          <p className="text-sm text-gray mb-8">See exactly how much money you're leaving on the table by not having an automated sales pipeline.</p>
+          
+          <div className="space-y-6">
+            <div>
+              <div className="flex justify-between mb-2">
+                <label className="text-xs font-bold text-ink uppercase tracking-wider">Monthly Visitors / Leads</label>
+                <span className="text-sm font-bold text-green">{visitors.toLocaleString()}</span>
+              </div>
+              <input 
+                type="range" min="100" max="10000" step="100" 
+                value={visitors} onChange={(e) => setVisitors(Number(e.target.value))}
+                className="w-full h-2 bg-cream3 rounded-lg appearance-none cursor-pointer"
+                style={{ accentColor: '#1f4d32' }}
+              />
+            </div>
+            
+            <div>
+              <div className="flex justify-between mb-2">
+                <label className="text-xs font-bold text-ink uppercase tracking-wider">Current Conversion Rate</label>
+                <span className="text-sm font-bold text-green">{conversion}%</span>
+              </div>
+              <input 
+                type="range" min="0.1" max="5" step="0.1" 
+                value={conversion} onChange={(e) => setConversion(Number(e.target.value))}
+                className="w-full h-2 bg-cream3 rounded-lg appearance-none cursor-pointer"
+                style={{ accentColor: '#1f4d32' }}
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between mb-2">
+                <label className="text-xs font-bold text-ink uppercase tracking-wider">Average Order Value (R)</label>
+                <span className="text-sm font-bold text-green">R {aov.toLocaleString()}</span>
+              </div>
+              <input 
+                type="range" min="100" max="5000" step="50" 
+                value={aov} onChange={(e) => setAov(Number(e.target.value))}
+                className="w-full h-2 bg-cream3 rounded-lg appearance-none cursor-pointer"
+                style={{ accentColor: '#1f4d32' }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-ink rounded-2xl p-8 text-white flex flex-col justify-center shadow-inner relative overflow-hidden">
+          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-accent/20 rounded-full blur-[40px]" />
+          <div className="relative z-10">
+            <div className="mb-6">
+              <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-1">Current Monthly Revenue</div>
+              <div className="text-2xl font-bold">R {Math.round(currentRevenue).toLocaleString()}</div>
+            </div>
+            
+            <div className="mb-6">
+              <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-1">Potential With Opti-Link</div>
+              <div className="text-2xl font-bold text-accent">R {Math.round(potentialRevenue).toLocaleString()}</div>
+            </div>
+
+            <div className="pt-6 border-t border-white/10">
+              <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-1">Money Left On The Table</div>
+              <div className="text-4xl md:text-5xl font-black text-white tracking-tighter">R {Math.round(lostRevenue).toLocaleString()}<span className="text-lg font-bold text-white/50">/mo</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
+  const [currentView, setCurrentView] = useState<'landing' | 'auth' | 'dashboard' | 'freelancers' | 'creators' | 'influencers' | 'careers' | 'academy'>('landing');
   const [scrolled, setScrolled] = useState(false);
   const [surveyStep, setSurveyStep] = useState(1);
   const [answers, setAnswers] = useState<Record<number, { val: string, score: number }>>({});
@@ -207,50 +308,93 @@ export default function App() {
     };
   };
 
+  if (currentView === 'auth') {
+    return <Auth onLogin={() => setCurrentView('dashboard')} onBack={() => setCurrentView('landing')} />;
+  }
+
+  if (currentView === 'dashboard') {
+    return <Dashboard onLogout={() => setCurrentView('landing')} />;
+  }
+
   return (
     <div className="min-h-screen bg-cream selection:bg-accent selection:text-ink">
       {/* Navigation */}
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6",
-        scrolled ? "bg-cream/95 backdrop-blur-xl border-b border-bdr py-3" : "py-6"
+        scrolled ? "bg-cream/95 backdrop-blur-xl border-b border-bdr py-4" : "py-8"
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <Logo dark className="w-10 h-10" />
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setCurrentView('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <Logo dark className="w-12 h-12" />
             <div className="leading-none">
-              <strong className="block text-sm font-black tracking-tight text-ink">Opti-Link</strong>
-              <span className="block text-[0.55rem] font-bold text-gray-lt uppercase tracking-[0.2em]">Media Group</span>
+              <strong className="block text-xl font-black tracking-tight text-ink">Opti-Link</strong>
+              <span className="block text-[0.7rem] font-bold text-gray-lt uppercase tracking-[0.2em]">Media Group</span>
             </div>
           </div>
           
-            <ul className="hidden md:flex items-center gap-10">
+            <ul className="hidden md:flex items-center gap-12">
               {[
                 { name: 'Features', id: 'features' },
-                { name: 'Solutions', id: 'services' },
+                { name: 'Solutions', id: 'services', dropdown: ['Freelancers', 'Creators', 'Influencers', 'Careers', 'Academy'] },
                 { name: 'Pricing', id: 'pricing' },
                 { name: 'Results', id: 'results' }
               ].map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="relative group">
                   <a 
                     href={`#${item.id}`} 
                     onClick={(e) => {
                       e.preventDefault();
-                      document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                      if (currentView !== 'landing') {
+                        setCurrentView('landing');
+                        setTimeout(() => document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' }), 100);
+                      } else {
+                        document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                      }
                     }}
-                    className="text-xs font-semibold text-gray hover:text-ink transition-colors flex items-center gap-1"
+                    className="text-base font-bold text-gray hover:text-ink transition-colors flex items-center gap-1"
                   >
                     {item.name}
-                    {item.name === 'Solutions' && <ChevronDown size={12} className="text-gray-lt" />}
+                    {item.dropdown && <ChevronDown size={16} className="text-gray-lt" />}
                   </a>
+                  {item.dropdown && (
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-bdr-d rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all overflow-hidden">
+                      {item.dropdown.map(sub => (
+                        <a 
+                          key={sub} 
+                          href={`#${sub.toLowerCase()}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentView(sub.toLowerCase() as any);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="block px-5 py-3 text-sm font-bold text-gray hover:text-ink hover:bg-cream transition-colors border-b border-cream last:border-0"
+                        >
+                          {sub}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
 
           <div className="flex items-center gap-4">
-            <button className="text-xs font-bold text-ink px-4 py-2 hover:opacity-70 transition-opacity">Log in</button>
             <button 
-              onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-ink text-white text-xs font-bold px-6 py-2.5 rounded-lg hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10"
+              onClick={() => setCurrentView('auth')}
+              className="hidden md:block text-base font-bold text-ink px-5 py-2.5 hover:bg-cream rounded-lg transition-colors"
+            >
+              Client Login
+            </button>
+            <button 
+              onClick={() => {
+                if (currentView !== 'landing') {
+                  setCurrentView('landing');
+                  setTimeout(() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                } else {
+                  document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="bg-ink text-white text-base font-bold px-7 py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10"
             >
               Get started
             </button>
@@ -258,35 +402,38 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-24 px-6 min-h-screen flex items-center overflow-hidden">
+      {currentView === 'landing' ? (
+        <>
+          {/* Hero Section */}
+          <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 min-h-[90vh] flex items-center overflow-hidden bg-grid-pattern">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_65%_40%,rgba(31,77,50,0.06)_0%,transparent_70%)] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="flex flex-col items-center"
           >
-            <div className="mb-10">
-              <Logo className="w-28 h-28 drop-shadow-2xl" />
+            <div className="mb-12">
+              <SphereLogo3D className="w-48 h-48 md:w-56 md:h-56" />
             </div>
             
-            <div className="inline-flex items-center gap-2.5 bg-green-lt border border-green/20 rounded-full px-4 py-1.5 mb-8">
-              <MapPin size={14} className="text-green" />
+            <div className="inline-flex items-center gap-2.5 bg-green-lt border border-green/20 rounded-full px-4 py-1.5 mb-10">
+              <Globe size={14} className="text-green" />
               <div className="w-1.5 h-1.5 rounded-full bg-green animate-blink" />
-              <span className="text-[0.7rem] font-bold text-green uppercase tracking-wider">Built for South African SMMEs</span>
+              <span className="font-mono text-[10px] font-bold text-green uppercase tracking-[0.2em]">Built for Global Growth</span>
             </div>
 
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-ink tracking-tighter leading-[0.9] mb-8">
-              Stop losing customers.<br />Start selling<br /><span className="text-green italic">online.</span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-ink tracking-tight leading-[1.1] mb-10 max-w-4xl">
+              Opti Link Media:<br />Consulting & <span className="text-green italic">Digital Growth.</span>
             </h1>
 
-            <p className="text-lg text-gray max-w-md leading-relaxed mb-10">
-              Get your shop on the internet, automate your customer follow-ups, and make more money — live in 14 days, R0 upfront.
+            <p className="text-lg text-gray max-w-2xl leading-relaxed mb-12">
+              A strategic framework for scaling client acquisition through structured consulting, implementation services, and revenue optimisation.
             </p>
 
-            <div className="flex flex-wrap gap-4 mb-16">
+            <div className="flex flex-wrap justify-center gap-4 mb-16">
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-ink text-white px-8 py-4 rounded-xl font-bold text-base flex items-center gap-3 hover:bg-green hover:-translate-y-1 transition-all shadow-xl shadow-ink/10"
@@ -302,14 +449,14 @@ export default function App() {
               </button>
             </div>
 
-            <div className="flex gap-12 pt-10 border-t border-bdr">
+            <div className="flex flex-wrap justify-center gap-12 pt-10 border-t border-bdr w-full max-w-3xl">
               {[
                 { val: '14d', lbl: 'Days to first results' },
                 { val: 'R0', lbl: 'Upfront on pilot model' },
                 { val: '3.2×', lbl: 'Average ROI, 12 months' }
               ].map((stat, i) => (
                 <div key={i}>
-                  <div className="text-3xl font-black text-ink tracking-tighter">
+                  <div className="text-3xl font-black text-ink tracking-tighter font-mono">
                     {stat.val.includes('d') ? <>{stat.val.replace('d', '')}<span className="text-green">d</span></> : 
                      stat.val.includes('R') ? <><span className="text-green">R</span>{stat.val.replace('R', '')}</> :
                      stat.val.includes('×') ? <>{stat.val.replace('×', '')}<span className="text-green">×</span></> : stat.val}
@@ -324,38 +471,52 @@ export default function App() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="hidden lg:block relative h-[600px] w-full flex items-center justify-center"
+            className="hidden lg:block relative h-[400px] w-full flex items-center justify-center mt-12"
           >
             <Character3D />
           </motion.div>
         </div>
       </section>
 
+      {/* Trusted By Section */}
+      <div className="border-y border-bdr bg-white/50 py-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-8">Trusted by enterprise scaling teams across 14 countries</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-40 grayscale">
+            <div className="font-black text-2xl tracking-tighter">NEXUS<span className="font-light">GLOBAL</span></div>
+            <div className="font-black text-2xl tracking-widest">AURA</div>
+            <div className="font-black text-2xl tracking-tighter">VERTEX<span className="text-green">.</span></div>
+            <div className="font-black text-2xl tracking-tight">QUANTUM</div>
+            <div className="font-black text-2xl tracking-widest">ELEVATE</div>
+          </div>
+        </div>
+      </div>
+
       {/* Logo Strip Section */}
-      <section className="bg-ink py-24 px-6 overflow-hidden">
+      <section className="bg-ink py-24 px-6 overflow-hidden bg-grid-pattern-dark">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1fr_2fr] gap-20 items-center">
           <div>
             <Logo dark className="w-36 h-36 mb-8 drop-shadow-[0_0_40px_rgba(200,240,96,0.2)]" />
-            <div className="text-[0.7rem] font-bold text-white/30 uppercase tracking-[0.3em] mb-3">About us</div>
+            <div className="font-mono text-[10px] font-bold text-white/30 uppercase tracking-[0.3em] mb-3">[About us]</div>
             <p className="text-xl text-white/60 leading-relaxed max-w-xs">
-              We are South Africa's premier SMME digitisation and growth partner. We don't sell software — we <strong className="text-accent">operate your entire digital engine</strong> so you can focus on what you do best.
+              We are a premier global digitisation and growth partner. We don't sell software — we <strong className="text-accent">operate your entire digital engine</strong> so you can focus on what you do best.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { num: '150+', lbl: 'Stores digitised across South Africa', change: 'Growing every month', icon: <TrendingUp size={14} /> },
+              { num: '150+', lbl: 'Stores digitised globally', change: 'Growing every month', icon: <TrendingUp size={14} /> },
               { num: '14d', lbl: 'Average time to first results, guaranteed', change: 'Or no service fee', icon: <Rocket size={14} /> },
               { num: 'R0', lbl: 'Upfront cost on our pilot model', change: 'Zero risk to start', icon: <Check size={14} /> },
               { num: '3.2×', lbl: 'Average client ROI within 12 months', change: 'Outcome-focused only', icon: <TrendingUp size={14} /> },
               { num: 'R42k', lbl: 'Average monthly revenue recovered per client', change: 'From automation alone', icon: <Banknote size={14} /> },
               { num: '5', lbl: 'Pilot slots available per month — act fast', change: '2 spots remaining', icon: <Hourglass size={14} /> }
             ].map((stat, i) => (
-              <div key={i} className="relative group p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+              <div key={i} className="relative group p-8 rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden backdrop-blur-sm">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
-                <div className="text-4xl font-black text-white tracking-tighter mb-2">{stat.num}</div>
-                <div className="text-xs text-white/40 font-medium leading-relaxed mb-4">{stat.lbl}</div>
-                <div className="flex items-center gap-2 text-[0.7rem] font-bold text-accent uppercase tracking-wider">
+                <div className="text-4xl font-black text-white tracking-tighter mb-2 font-mono">{stat.num}</div>
+                <div className="text-xs text-white/40 font-bold leading-relaxed mb-4">{stat.lbl}</div>
+                <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-accent uppercase tracking-wider">
                   {stat.icon}
                   {stat.change}
                 </div>
@@ -369,7 +530,7 @@ export default function App() {
       <div className="bg-white border-y border-bdr py-12 px-6">
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
           {[
-            { icon: <Target className="text-green" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. We earn via software partner commissions — you see results first, every time.' },
+            { icon: <Target className="text-green" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. Our costs are subsidized by software partners — you see results first, every time.' },
             { icon: <Rocket className="text-green" />, title: 'Live in 7 Days or We Walk', desc: 'If your digital system isn\'t fully functional within 7 days, no service fees are charged. Hard deadline, every client.' },
             { icon: <TrendingUp className="text-green" />, title: 'Revenue-Focused Only', desc: 'We don\'t report on vanity metrics. We track leads, conversions, and revenue attributed directly to your digital system.' }
           ].map((item, i) => (
@@ -394,28 +555,25 @@ export default function App() {
             <Heading>Everything your business needs to grow.</Heading>
           </div>
           <div>
-            <Subheading>From setting up your online shop to automatic follow-ups — we build and run the entire system for South African small businesses.</Subheading>
+            <Subheading>From setting up your online shop to automatic follow-ups — we build and run the entire system for growing businesses worldwide.</Subheading>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-bdr border border-bdr rounded-3xl overflow-hidden">
+        <div className="grid md:grid-cols-3 gap-8">
           {[
-            { icon: <ShoppingCart />, title: 'Online Shop Setup & Running', desc: 'We build and run your online store — listing products, making it easy to buy, and fixing any issues so you don\'t have to.', tags: ['Shopify', 'PayFast', 'Stripe'] },
-            { icon: <MessageSquare />, title: 'Automatic WhatsApp Follow-ups', desc: 'A system that automatically messages people who ask about your products, so you never miss a sale.', tags: ['WhatsApp API', 'Automation'] },
-            { icon: <Settings />, title: 'Customer Memory System', desc: 'A system that remembers every customer, sends them birthday wishes, and reminds them to buy again.', tags: ['CRM', 'Loyalty'] },
-            { icon: <Smartphone />, title: 'Social Media Posting', desc: 'We create and post 12–20 beautiful posts every month on your Facebook and Instagram to keep you relevant.', tags: ['Facebook', 'Instagram'] },
-            { icon: <Megaphone />, title: 'Customer-Finding Ads', desc: 'We run ads that show your products to the right people in your area who are ready to buy.', tags: ['Meta Ads', 'Google Ads'] },
-            { icon: <BarChart3 />, title: 'Simple Monthly Reports', desc: 'A simple one-page report every month showing how many new customers and how much money you made.', tags: ['Reports', 'Growth'] }
+            { icon: <HelpCircle />, title: 'Free Consultation (Pilot)', desc: 'A 45–60 minute business audit to diagnose pain points and create a customised growth roadmap.', tags: ['Audit', 'Roadmap'] },
+            { icon: <ShoppingCart />, title: 'Implementation Package', desc: 'Full setup of your online store, hosting, domain, CRM, and automation tools.', tags: ['Shopify', 'CRM', 'Automation'] },
+            { icon: <TrendingUp />, title: 'Monthly Retainer', desc: 'Ongoing marketing operations, ad management, content creation, and automation upgrades.', tags: ['Ads', 'Content', 'Growth'] }
           ].map((svc, i) => (
-            <div key={i} className="bg-white p-10 hover:bg-cream transition-colors group card-hover">
-              <div className="w-12 h-12 rounded-xl bg-green-lt border border-green/10 flex items-center justify-center text-green mb-6 group-hover:scale-110 transition-transform">
+            <div key={i} className="bg-white p-10 rounded-2xl border border-bdr-d shadow-sm hover:shadow-xl transition-all group">
+              <div className="w-16 h-16 rounded-xl bg-green-lt border border-green/10 flex items-center justify-center text-green mb-8 group-hover:scale-110 transition-transform">
                 {svc.icon}
               </div>
-              <h3 className="text-lg font-bold text-ink mb-3 tracking-tight">{svc.title}</h3>
-              <p className="text-sm text-gray leading-relaxed mb-6">{svc.desc}</p>
+              <h3 className="text-xl font-black text-ink mb-4 tracking-tight">{svc.title}</h3>
+              <p className="text-sm text-gray leading-relaxed mb-8">{svc.desc}</p>
               <div className="flex flex-wrap gap-2">
                 {svc.tags.map(tag => (
-                  <span key={tag} className="text-[0.65rem] font-bold bg-cream border border-bdr-d rounded-md px-2.5 py-1 text-gray uppercase tracking-wider">
+                  <span key={tag} className="font-mono text-[10px] font-bold bg-cream border border-bdr-d rounded-md px-3 py-1.5 text-gray uppercase tracking-wider">
                     {tag}
                   </span>
                 ))}
@@ -431,24 +589,23 @@ export default function App() {
         <Heading centered className="mb-4">Live and selling in 14 days.</Heading>
         <Subheading centered className="mb-20">A simple 5-step plan that takes your business from "just a shop" to a digital machine — starting from wherever you are today.</Subheading>
         
-        <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          <div className="absolute top-6 left-[10%] right-[10%] h-[1.5px] bg-gradient-to-r from-transparent via-bdr-d to-transparent hidden lg:block" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
           {[
-            { phase: '01', title: 'Your Online Home', desc: 'Setting up your website, payment system, and professional email', icon: <Leaf /> },
-            { phase: '02', title: 'Customer System', desc: 'Setting up WhatsApp and the system that remembers your leads', icon: <Settings /> },
-            { phase: '03', title: 'Getting Noticed', desc: 'Starting your social media posts and getting found on Google', icon: <Megaphone /> },
-            { phase: '04', title: 'Finding Buyers', desc: 'Running ads to bring new people to your shop every day', icon: <Rocket /> },
-            { phase: '05', title: 'Full Growth', desc: 'Managing everything for you so you just focus on your products', icon: <Trophy /> }
+            { phase: '01', title: 'Lead Harvesting', desc: 'Sophisticated scraping across LinkedIn, Google Maps, and Facebook.', icon: <Smartphone /> },
+            { phase: '02', title: 'Automated Outreach', desc: '6-touch sequences across email, LinkedIn, and WhatsApp.', icon: <MessageSquare /> },
+            { phase: '03', title: 'Consultation & Conversion', desc: 'Structured 45-min audit delivering a Business Health Score.', icon: <HelpCircle /> },
+            { phase: '04', title: 'Implementation', desc: '30-day delivery of domain, store, CRM, and automation.', icon: <Settings /> },
+            { phase: '05', title: 'Launch & Optimisation', desc: 'Weekly reporting, KPI measurement, and retainer proposals.', icon: <Trophy /> }
           ].map((step, i) => (
             <div key={i} className="relative z-10 text-center">
-              <div className="w-12 h-12 rounded-full bg-white border-2 border-bdr-d flex items-center justify-center mx-auto mb-6 text-green shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-white border border-bdr-d flex items-center justify-center mx-auto mb-6 text-green shadow-sm">
                 {step.icon}
               </div>
               <div className="inline-block bg-green-lt text-green text-[0.65rem] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">
                 Phase {step.phase}
               </div>
               <h4 className="text-sm font-bold text-ink mb-2 tracking-tight">{step.title}</h4>
-              <p className="text-[0.75rem] text-gray leading-relaxed">{step.desc}</p>
+              <p className="text-xs text-gray leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>
@@ -460,7 +617,7 @@ export default function App() {
               The free pilot model —<br />how it actually works.
             </h3>
             <p className="text-white/50 text-lg leading-relaxed max-w-2xl">
-              Cash-strapped? We build your entire digital engine at <strong className="text-accent">zero upfront cost</strong>. You activate the software tools your business needs through our affiliate links — you own the tools. We earn a partner commission from the software companies, not from you. Your full setup, delivered in 7 days, guaranteed.
+              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="text-accent">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 7 days, guaranteed, with zero risk.
             </p>
           </div>
           <button 
@@ -471,6 +628,8 @@ export default function App() {
             <ArrowRight size={20} className="inline ml-3" />
           </button>
         </div>
+
+        <RevenueCalculator />
       </Section>
 
       {/* Pricing Section */}
@@ -524,13 +683,15 @@ export default function App() {
               <div className={cn("h-px w-full mb-8", plan.popular ? "bg-white/10" : "bg-bdr")} />
               <ul className="space-y-4 mb-10">
                 {plan.feats.map(feat => (
-                  <li key={feat} className={cn("flex items-start gap-3 text-sm font-medium", plan.popular ? "text-white/70" : "text-ink3")}>
+                  <li key={feat} className={cn("flex items-start gap-3 text-sm font-bold", plan.popular ? "text-white/70" : "text-ink3")}>
                     <Check size={16} className={cn("mt-0.5 flex-shrink-0", plan.popular ? "text-accent" : "text-green")} />
                     {feat}
                   </li>
                 ))}
               </ul>
-              <button className={cn(
+              <button 
+                onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
+                className={cn(
                 "w-full py-4 rounded-xl font-bold text-sm transition-all active:scale-95",
                 plan.popular 
                   ? "bg-accent text-ink hover:opacity-90" 
@@ -564,7 +725,7 @@ export default function App() {
                 </div>
                 <div>
                   <div className="text-sm font-bold text-ink tracking-tight">{testi.name}</div>
-                  <div className="text-[0.7rem] text-gray-lt font-medium">{testi.role}</div>
+                  <div className="text-[0.7rem] text-gray-lt font-bold">{testi.role}</div>
                 </div>
               </div>
             </div>
@@ -722,9 +883,9 @@ export default function App() {
                       <div className="space-y-8">
                         <div>
                           <h3 className="text-2xl font-black text-ink tracking-tight mb-2">
-                            {surveyStep === 3 ? "What is your biggest headache right now?" :
+                            {surveyStep === 3 ? "If you could wave a magic wand and fix one part of your sales process, what would it be?" :
                              surveyStep === 4 ? "How much money does the business make monthly?" :
-                             surveyStep === 5 ? "What would help you the most right now?" :
+                             surveyStep === 5 ? "What is the biggest opportunity you're currently missing out on?" :
                              "How would you like to start?"}
                           </h3>
                           <p className="text-sm text-gray-lt">
@@ -737,22 +898,22 @@ export default function App() {
                         <div className={cn("grid gap-3", surveyStep === 4 || surveyStep === 6 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2")}>
                           {(
                             surveyStep === 3 ? [
-                              { val: 'leads', title: 'Not enough leads', sub: 'Nobody is finding or contacting me', score: 2, icon: <TrendingDown /> },
-                              { val: 'convert', title: 'Leads don\'t convert', sub: 'People enquire but never actually buy', score: 2, icon: <Banknote /> },
-                              { val: 'repeat', title: 'No repeat customers', sub: 'People buy once, I never hear from them again', score: 2, icon: <Repeat /> },
-                              { val: 'time', title: 'No time to manage it all', sub: 'Too busy running the business to market it', score: 2, icon: <Timer /> }
+                              { val: 'leads', title: 'Getting more qualified leads', sub: 'I need a steady stream of new customers', score: 2, icon: <TrendingDown /> },
+                              { val: 'convert', title: 'Converting more leads into sales', sub: 'I have enquiries but they don\'t buy', score: 2, icon: <Banknote /> },
+                              { val: 'repeat', title: 'Getting customers to buy again', sub: 'I need to turn one-time buyers into loyal fans', score: 2, icon: <Repeat /> },
+                              { val: 'time', title: 'Saving time on admin and follow-ups', sub: 'I\'m too busy running the business to market it', score: 2, icon: <Timer /> }
                             ] : surveyStep === 4 ? [
                               { val: '0-10k', title: 'R0 – R10,000 per month', sub: 'Pre-revenue or just getting started', score: 0, icon: <Leaf /> },
                               { val: '10-50k', title: 'R10,000 – R50,000 per month', sub: 'Early traction, ready to scale', score: 1, icon: <TrendingUp /> },
                               { val: '50-150k', title: 'R50,000 – R150,000 per month', sub: 'Growing fast, need systems to keep up', score: 2, icon: <Rocket /> },
                               { val: '150k+', title: 'R150,000+ per month', sub: 'Established — want to optimise and dominate', score: 3, icon: <Diamond /> }
                             ] : surveyStep === 5 ? [
-                              { val: 'store', title: 'Get my store live & selling', sub: 'Professional site + payment gateway', score: 1, icon: <ShoppingCart /> },
-                              { val: 'pipeline', title: 'Automate my sales follow-up', sub: 'WhatsApp + CRM pipeline running 24/7', score: 1, icon: <MessageSquare /> },
-                              { val: 'traffic', title: 'Drive more traffic & leads', sub: 'Social media + paid ads managed for me', score: 1, icon: <Megaphone /> },
-                              { val: 'all', title: 'The full system — all of the above', sub: 'End-to-end digital growth engine', score: 2, icon: <Trophy /> }
+                              { val: 'store', title: 'An online store that sells 24/7', sub: 'Professional site + payment gateway', score: 1, icon: <ShoppingCart /> },
+                              { val: 'pipeline', title: 'Automated WhatsApp & CRM pipeline', sub: 'Sales follow-up running 24/7', score: 1, icon: <MessageSquare /> },
+                              { val: 'traffic', title: 'Targeted social media & paid ads', sub: 'More visibility and high-quality leads', score: 1, icon: <Megaphone /> },
+                              { val: 'all', title: 'A full end-to-end digital growth engine', sub: 'Everything integrated for maximum results', score: 2, icon: <Trophy /> }
                             ] : [
-                              { val: 'pilot', title: 'Free pilot — R0 upfront', sub: 'I activate the software tools. Opti-Link earns via partner commissions. I see results first, then decide.', score: 2, icon: <HelpCircle /> },
+                              { val: 'pilot', title: 'Free pilot — R0 upfront', sub: 'I activate the software tools. We see results first, then decide.', score: 2, icon: <HelpCircle /> },
                               { val: 'paid', title: 'Paid setup — fastest delivery', sub: 'I pay the once-off setup fee and we start immediately with priority build and 7-day delivery.', score: 3, icon: <Rocket /> },
                               { val: 'unsure', title: 'Not sure yet — I want advice first', sub: 'Show me the numbers and the plan on the call, then I\'ll decide with confidence.', score: 1, icon: <MessageSquare /> }
                             ]
@@ -814,12 +975,14 @@ export default function App() {
                   <div className="inline-block bg-green-lt border border-green/20 rounded-full px-5 py-1.5 mb-6 text-[0.75rem] font-bold text-green uppercase tracking-wider">
                     {getPhaseInfo().phase}
                   </div>
-                  <h3 className="text-2xl font-black text-ink tracking-tight mb-2 leading-tight">{getPhaseInfo().title}</h3>
-                  <p className="text-sm text-gray leading-relaxed max-w-md mx-auto mb-10">{getPhaseInfo().sub}</p>
+                  <h3 className="text-2xl font-black text-ink tracking-tight mb-2 leading-tight">Your Business Health Report is ready.</h3>
+                  <p className="text-sm text-gray leading-relaxed max-w-md mx-auto mb-10">
+                    Enter your details below to unlock your personalised growth plan and see exactly where you're losing money.
+                  </p>
                   
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-4 text-left text-amber-900 font-semibold text-xs mb-10">
-                    <Hourglass size={18} className="flex-shrink-0 text-amber-600" />
-                    Only 5 pilot slots available per month — <strong>2 spots remaining this month.</strong>
+                  <div className="bg-green-lt border border-green/20 rounded-xl p-4 flex items-center gap-4 text-left text-green-900 font-semibold text-xs mb-10">
+                    <Check size={18} className="flex-shrink-0 text-green" />
+                    <span>Your report includes a 14-day growth roadmap and a free pilot offer.</span>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -886,7 +1049,7 @@ export default function App() {
                       'We jump on a 15-minute call and show you exactly how to fix it',
                       'You choose: free pilot or paid setup — zero pressure, ever'
                     ].map((step, i) => (
-                      <div key={i} className="flex items-start gap-4 text-sm text-ink3 font-medium">
+                      <div key={i} className="flex items-start gap-4 text-sm text-ink3 font-bold">
                         <div className="w-7 h-7 rounded-full bg-green-lt border border-green/20 flex items-center justify-center text-[0.65rem] font-black text-green flex-shrink-0 mt-0.5">
                           {i + 1}
                         </div>
@@ -922,14 +1085,14 @@ export default function App() {
                 </div>
               </div>
               <p className="text-sm text-white/40 leading-relaxed max-w-xs">
-                South Africa's SMME digital growth partner. We build, automate, and operate your online business so you can focus on what matters.
+                Your premier global digital growth partner. We build, automate, and operate your online business so you can focus on what matters.
               </p>
             </div>
 
             {[
               { title: 'Services', links: ['Ecommerce Setup', 'WhatsApp Automation', 'CRM & Workflows', 'Social Media', 'Paid Ads'] },
-              { title: 'Company', links: ['About', 'Pricing', 'Results', 'Free Audit'] },
-              { title: 'Contact', links: ['support@optilinkgroup.com', 'Cape Town'] }
+              { title: 'Global Offices', links: ['Cape Town (HQ)', 'London', 'Dubai', 'Singapore'] },
+              { title: 'Legal & Security', links: ['Trust Center', 'SOC 2 Compliance', 'GDPR Readiness', 'Privacy Policy'] }
             ].map((col, i) => (
               <div key={i}>
                 <h5 className="text-[0.65rem] font-black text-white/20 uppercase tracking-[0.3em] mb-8">{col.title}</h5>
@@ -952,6 +1115,7 @@ export default function App() {
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-xs text-white/20">© 2026 Opti-Link Media Group. All rights reserved.</p>
             <div className="flex gap-8 text-xs text-white/20">
+              <a href="#" className="hover:text-white transition-colors flex items-center gap-1"><ShieldCheck size={12} /> SOC 2 Type II Certified</a>
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             </div>
@@ -960,6 +1124,16 @@ export default function App() {
       </footer>
 
       <Chatbot />
+        </>
+      ) : (
+        <SolutionPage 
+          type={currentView} 
+          onCTA={() => {
+            setCurrentView('landing');
+            setTimeout(() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' }), 100);
+          }} 
+        />
+      )}
     </div>
   );
 }

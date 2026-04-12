@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
   --color-ink: #080808;
   --color-ink2: #121212;
@@ -24,7 +25,12 @@
 
 @layer base {
   body {
-    @apply bg-cream text-ink font-sans antialiased selection:bg-accent selection:text-ink;
+    @apply bg-cream text-ink font-sans font-bold antialiased selection:bg-accent selection:text-ink;
+  }
+  
+  /* Make all Lucide icons bolder */
+  .lucide {
+    stroke-width: 3px !important;
   }
   
   /* Noise texture overlay */
@@ -36,6 +42,19 @@
     pointer-events: none;
     z-index: 9999;
     opacity: 0.5;
+  }
+}
+
+@layer utilities {
+  .bg-grid-pattern {
+    background-image: linear-gradient(to right, rgba(8, 8, 8, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(8, 8, 8, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .bg-grid-pattern-dark {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }
 
