@@ -75,8 +75,8 @@ const OnboardingModal = ({
         <div className="p-8 md:p-12 flex-1">
           {step === 1 && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-8">
-              <div className="w-20 h-20 bg-green-lt rounded-full flex items-center justify-center mx-auto mb-6">
-                <Rocket size={32} className="text-green" />
+              <div className="w-20 h-20 bg-green rounded-full flex items-center justify-center mx-auto mb-6">
+                <Rocket size={32} className="text-ink" />
               </div>
               <h2 className="text-3xl font-black text-ink tracking-tight mb-4">Welcome to Opti-Link</h2>
               <p className="text-gray leading-relaxed max-w-md mx-auto">
@@ -125,7 +125,7 @@ const OnboardingModal = ({
               
               <div className="grid gap-4">
                 <div className="p-5 border border-bdr-d rounded-xl flex items-start gap-4 hover:bg-cream transition-colors group">
-                  <div className="w-12 h-12 rounded-lg bg-green-lt flex items-center justify-center text-green shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-lg bg-green flex items-center justify-center text-ink shrink-0 group-hover:scale-110 transition-transform">
                     <Users size={24} />
                   </div>
                   <div>
@@ -140,7 +140,7 @@ const OnboardingModal = ({
                 </div>
 
                 <div className="p-5 border border-bdr-d rounded-xl flex items-start gap-4 hover:bg-cream transition-colors group">
-                  <div className="w-12 h-12 rounded-lg bg-green-lt flex items-center justify-center text-green shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-lg bg-green flex items-center justify-center text-ink shrink-0 group-hover:scale-110 transition-transform">
                     <MessageSquare size={24} />
                   </div>
                   <div>
@@ -155,7 +155,7 @@ const OnboardingModal = ({
                 </div>
 
                 <div className="p-5 border border-bdr-d rounded-xl flex items-start gap-4 hover:bg-cream transition-colors group">
-                  <div className="w-12 h-12 rounded-lg bg-green-lt flex items-center justify-center text-green shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-lg bg-green flex items-center justify-center text-ink shrink-0 group-hover:scale-110 transition-transform">
                     <BarChart3 size={24} />
                   </div>
                   <div>
@@ -174,8 +174,8 @@ const OnboardingModal = ({
 
           {step === 4 && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-8">
-              <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 size={32} className="text-accent" />
+              <div className="w-20 h-20 bg-green rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 size={32} className="text-ink" />
               </div>
               <h2 className="text-3xl font-black text-ink tracking-tight mb-4">You're All Set!</h2>
               <p className="text-gray leading-relaxed max-w-md mx-auto">
@@ -235,7 +235,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className="min-h-screen bg-cream flex selection:bg-accent selection:text-ink">
+    <div className="min-h-screen bg-cream flex selection:bg-green selection:text-ink">
       {showOnboarding && (
         <OnboardingModal 
           onClose={() => setShowOnboarding(false)} 
@@ -336,13 +336,13 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
           <div className="flex items-center gap-4">
             <button className="w-10 h-10 rounded-full bg-white border border-bdr-d flex items-center justify-center text-gray hover:text-ink transition-colors relative">
               <Bell size={18} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-accent rounded-full border-2 border-white"></span>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-green rounded-full border-2 border-white"></span>
             </button>
             <div className="text-right hidden md:block">
               <div className="text-sm font-bold text-ink">{profileData.businessName}</div>
               <div className="text-xs text-gray">Growth Plan</div>
             </div>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-lt border-2 border-green/20 flex items-center justify-center text-green font-black text-sm md:text-base">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green border-2 border-ink flex items-center justify-center text-ink font-black text-sm md:text-base">
               {profileData.fullName.split(' ').map(n => n[0]).join('')}
             </div>
           </div>
@@ -365,10 +365,10 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
               className="bg-white p-6 rounded-xl border border-bdr-d shadow-sm"
             >
               <div className="flex justify-between items-start mb-4">
-                <div className="w-10 h-10 rounded-lg bg-green-lt flex items-center justify-center text-green">
+                <div className="w-10 h-10 rounded-lg bg-green flex items-center justify-center text-ink">
                   {metric.icon}
                 </div>
-                <div className="flex items-center gap-1 font-mono text-[10px] font-bold text-green bg-green-lt px-2 py-1 rounded-md">
+                <div className="flex items-center gap-1 font-mono text-[10px] font-bold text-ink bg-green px-2 py-1 rounded-md">
                   <ArrowUpRight size={12} />
                   {metric.trend}
                 </div>
@@ -389,7 +389,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-black text-ink tracking-tight">Implementation Phase</h2>
-              <span className="font-mono text-[10px] font-bold text-green bg-green-lt px-3 py-1 rounded-md uppercase tracking-wider">75% Complete</span>
+              <span className="font-mono text-[10px] font-bold text-ink bg-green px-3 py-1 rounded-md uppercase tracking-wider">75% Complete</span>
             </div>
             
             <div className="space-y-4">
@@ -425,37 +425,37 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
             transition={{ delay: 0.4 }}
             className="bg-ink rounded-xl p-8 text-white relative overflow-hidden"
           >
-            <div className="absolute -top-20 -right-20 w-64 h-64 bg-accent/10 rounded-full blur-[60px]" />
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-green/10 rounded-full blur-[60px]" />
             <h2 className="text-xl font-black tracking-tight mb-6 relative z-10">Quick Actions</h2>
             
             <div className="space-y-3 relative z-10">
               <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
                 <div className="flex items-center gap-3 text-sm font-bold">
-                  <ShoppingCart size={18} className="text-accent" />
+                  <ShoppingCart size={18} className="text-green" />
                   Add New Product
                 </div>
                 <ArrowRight size={16} className="text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </button>
               <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
                 <div className="flex items-center gap-3 text-sm font-bold">
-                  <MessageSquare size={18} className="text-accent" />
+                  <MessageSquare size={18} className="text-green" />
                   Send Broadcast
                 </div>
                 <ArrowRight size={16} className="text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </button>
               <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
                 <div className="flex items-center gap-3 text-sm font-bold">
-                  <BarChart3 size={18} className="text-accent" />
+                  <BarChart3 size={18} className="text-green" />
                   View Full Report
                 </div>
                 <ArrowRight size={16} className="text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </button>
             </div>
 
-            <div className="mt-8 p-4 rounded-2xl bg-accent/10 border border-accent/20 relative z-10">
-              <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1">Need Help?</div>
+            <div className="mt-8 p-4 rounded-2xl bg-green/10 border border-green/20 relative z-10">
+              <div className="text-xs font-bold text-green uppercase tracking-wider mb-1">Need Help?</div>
               <div className="text-sm text-white/70 mb-3">Your account manager is available.</div>
-              <button className="text-xs font-bold bg-accent text-ink px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+              <button className="text-xs font-bold bg-green text-ink px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
                 Book a Call
               </button>
             </div>
@@ -603,8 +603,8 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                   </thead>
                   <tbody className="text-sm">
                     {[
-                      { name: 'Sarah Jenkins', email: 'sarah@example.com', status: 'Hot Lead', value: 'R 12,500', date: '2 hours ago', color: 'bg-accent text-ink' },
-                      { name: 'Michael Chen', email: 'mike@company.com', status: 'In Progress', value: 'R 8,000', date: 'Yesterday', color: 'bg-green-lt text-green' },
+                      { name: 'Sarah Jenkins', email: 'sarah@example.com', status: 'Hot Lead', value: 'R 12,500', date: '2 hours ago', color: 'bg-green text-ink' },
+                      { name: 'Michael Chen', email: 'mike@company.com', status: 'In Progress', value: 'R 8,000', date: 'Yesterday', color: 'bg-green/20 text-ink' },
                       { name: 'Emma Watson', email: 'emma@studio.co.za', status: 'New', value: 'R 15,000', date: '3 days ago', color: 'bg-cream3 text-ink' },
                       { name: 'David Smith', email: 'david@retail.com', status: 'Closed Won', value: 'R 24,000', date: '1 week ago', color: 'bg-ink text-white' },
                     ].map((lead, i) => (
@@ -653,7 +653,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                     </div>
                     <span className={cn(
                       "px-2 py-1 rounded-md font-mono text-[10px] font-bold uppercase tracking-wider",
-                      auto.status === 'Active' ? "bg-green-lt text-green" : "bg-cream3 text-gray"
+                      auto.status === 'Active' ? "bg-green text-ink" : "bg-cream3 text-gray"
                     )}>
                       {auto.status}
                     </span>

@@ -31,13 +31,13 @@ export const Character3D = () => {
   if (!webGLSupported) {
     return (
       <div className="w-full h-[500px] flex items-center justify-center relative">
-        <div className="absolute inset-0 bg-green-lt/20 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-green/20 rounded-full blur-[100px]" />
         <motion.div 
           animate={{ y: [-10, 10, -10] }}
           transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          className="relative z-10 w-64 h-64 bg-white rounded-full shadow-2xl border border-bdr-d flex items-center justify-center"
+          className="relative z-10 w-64 h-64 bg-green rounded-full shadow-2xl border border-ink/10 flex items-center justify-center"
         >
-          <Rocket size={80} className="text-green" />
+          <Rocket size={80} className="text-ink" />
         </motion.div>
       </div>
     );

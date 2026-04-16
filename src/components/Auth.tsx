@@ -17,10 +17,10 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
   };
 
   return (
-    <div className="min-h-screen bg-cream flex selection:bg-accent selection:text-ink">
+    <div className="min-h-screen bg-cream flex selection:bg-green selection:text-ink">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex w-1/2 bg-ink p-12 flex-col justify-between relative overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-accent/20 rounded-full blur-[100px]" />
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-green/20 rounded-full blur-[100px]" />
         <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-green/20 rounded-full blur-[100px]" />
         
         <div className="relative z-10">
@@ -32,7 +32,7 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
 
         <div className="relative z-10">
           <h1 className="text-5xl font-black text-white tracking-tighter leading-[1.1] mb-6">
-            Your digital<br />growth engine,<br /><span className="text-accent italic">centralised.</span>
+            Your digital<br />growth engine,<br /><span className="text-green italic">centralised.</span>
           </h1>
           <p className="text-white/60 text-lg max-w-md leading-relaxed">
             Access your live pipeline, track revenue recovery, and manage your automated marketing campaigns in one place.
@@ -110,7 +110,7 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
             <div className="mt-8 text-center">
               <p className="text-sm text-gray">
                 {isLogin ? "Don't have an account? " : "Already have an account? "}
-                <button onClick={() => setIsLogin(!isLogin)} className="font-bold text-ink hover:text-green transition-colors">
+                <button onClick={() => setIsLogin(!isLogin)} className="font-bold text-ink hover:text-green-mid transition-colors">
                   {isLogin ? 'Create one' : 'Sign in'}
                 </button>
               </p>

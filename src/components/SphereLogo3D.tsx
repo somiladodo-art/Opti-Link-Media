@@ -6,9 +6,9 @@ const AnimatedSphere = ({ dark }: { dark: boolean }) => {
   const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
 
-  const color = dark ? "#ffffff" : "#080808";
+  const color = dark ? "#ffffff" : "#000000";
   const baseColor = dark ? "#222222" : "#e0e0e0";
-  const accentColor = "#143d28"; // green
+  const accentColor = "#c8f060"; // lime green
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();

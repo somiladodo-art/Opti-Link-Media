@@ -84,13 +84,13 @@ export default function Chatbot() {
             {/* Header */}
             <div className="bg-ink p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-green flex items-center justify-center">
                   <Bot size={18} className="text-ink" />
                 </div>
                 <div>
                   <h3 className="text-white font-bold text-sm">Opti-Link AI</h3>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
                     <span className="text-[10px] text-white/50 uppercase tracking-wider font-bold">Online</span>
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export default function Chatbot() {
                 >
                   <div className={cn(
                     "w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1",
-                    msg.role === 'user' ? "bg-green text-white" : "bg-cream3 text-ink"
+                    msg.role === 'user' ? "bg-green text-ink" : "bg-cream3 text-ink"
                   )}>
                     {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
                   </div>
