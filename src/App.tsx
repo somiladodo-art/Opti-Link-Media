@@ -682,36 +682,45 @@ export default function App() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,240,96,0.1)_0%,transparent_50%)] pointer-events-none animate-pulse duration-[10s]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(200,240,96,0.05)_0%,transparent_40%)] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10 w-full">
           <motion.div
             initial={{ opacity: 0, y: 30, filter: 'blur(5px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex flex-col items-center w-full"
           >
-            <div className="mb-8">
-              <SphereLogo3D className="w-32 h-32 md:w-40 md:h-40" />
+            <div className="mb-6">
+              <span className="bg-red-50 text-red-600 border border-red-200 text-xs font-black px-4 py-1.5 uppercase tracking-widest rounded-full shadow-sm animate-pulse flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-600"></span> Limited: Only 5 Pilot Slots Per Month
+              </span>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[120px] font-black text-ink tracking-tighter leading-[0.9] uppercase mb-6">
-              DIGITAL <br className="hidden md:block" />
-              <span className="bg-green text-ink px-4 py-1.5 md:px-6 md:py-2 mt-2 md:mt-4 inline-block transform md:-rotate-1">MARKETING</span>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-black text-ink tracking-tighter leading-[1] uppercase mb-6 max-w-6xl mx-auto">
+              TURN YOUR BUSINESS INTO A <br className="hidden md:block" />
+              <span className="bg-green text-ink px-4 py-1.5 md:px-6 md:py-2 mt-2 md:mt-4 inline-block transform md:-rotate-1 whitespace-nowrap shadow-sm">REVENUE-GENERATING DIGITAL MACHINE</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray font-medium tracking-tight mb-12 max-w-3xl">
-              Thank you for joining this digital marketing workshop where we explore effective strategies and tools innovate collaborate optimize learn.
+            <p className="text-lg md:text-2xl text-gray font-medium tracking-tight mb-10 max-w-3xl leading-relaxed">
+              We build, automate, and run your entire digital marketing system — so you get more leads, more sales, and consistent growth with <strong className="text-ink">zero upfront cost</strong>.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-16 w-full max-w-4xl items-center">
-              <div className="bg-green text-ink font-bold px-6 py-3 text-sm md:text-lg rounded-xl shadow-sm flex items-center gap-2">
-                <Check size={18} strokeWidth={4} /> Presented by Opti-Link
-              </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16 w-full max-w-2xl items-center">
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-                className="group bg-ink text-white px-8 py-3.5 font-bold text-lg rounded-xl hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-green/20 active:scale-95 flex items-center gap-2"
+                className="w-full sm:w-auto group bg-ink text-white px-8 py-5 font-black text-lg md:text-xl rounded-xl hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 shadow-2xl shadow-ink/20 active:scale-95 flex items-center justify-center gap-3"
               >
-                Getting Started <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
+                Start Free Pilot <ArrowRight size={22} className="group-hover:translate-x-1.5 transition-transform" />
               </button>
+              <button 
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full sm:w-auto bg-white border-2 border-bdr text-ink px-8 py-5 font-black text-lg md:text-xl rounded-xl hover:border-ink hover:bg-cream transition-all duration-300 ease-out flex items-center justify-center gap-2"
+              >
+                View Features
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 text-xs font-bold text-gray-lt uppercase tracking-widest">
+              <ShieldCheck size={16} className="text-green" /> End-To-End Done For You
             </div>
           </motion.div>
         </div>
@@ -719,9 +728,9 @@ export default function App() {
 
       {/* Trusted By Section */}
       <div className="border-y border-bdr bg-gradient-to-b from-white/80 to-white/30 py-12 relative overflow-hidden backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-10">Trusted by enterprise scaling teams across 14 countries</p>
-          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-24 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
+          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-10">Trusted by scaling businesses across 14+ countries</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
             <div className="font-black text-2xl tracking-tighter">NEXUS<span className="font-light">GLOBAL</span></div>
             <div className="font-black text-2xl tracking-widest">AURA</div>
             <div className="font-black text-2xl tracking-tighter">VERTEX<span className="text-green">.</span></div>
@@ -738,7 +747,8 @@ export default function App() {
             <Logo className="w-36 h-36 mb-8" />
             <div className="font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-3">[About us]</div>
             <p className="text-xl text-ink leading-relaxed max-w-xs font-medium">
-              We are a premier global digitisation and growth partner. We don't sell software — we <strong className="bg-green text-ink px-1">operate your entire digital engine</strong> so you can focus on what you do best.
+              We are a global digital marketing and automation agency.<br/><br/>
+              We don't just build websites — we build <strong className="bg-green text-ink px-1">complete revenue systems</strong>. From Shopify stores to CRM automation and lead generation funnels, we design, launch, and manage everything your business needs to grow online.
             </p>
           </div>
           
@@ -791,8 +801,8 @@ export default function App() {
           <div>
             <Eyebrow>What we do</Eyebrow>
             <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
-              EVERYTHING YOUR<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUSINESS NEEDS</span>
+              DIGITAL MARKETING &<br />
+              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">AUTOMATION SERVICES</span>
             </h2>
           </div>
           <div>
@@ -800,11 +810,14 @@ export default function App() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[
-            { icon: <HelpCircle />, title: 'Free Consultation (Pilot)', desc: 'A 45–60 minute business audit to diagnose pain points and create a customised growth roadmap.', tags: ['Audit', 'Roadmap'] },
-            { icon: <ShoppingCart />, title: 'Implementation Package', desc: 'Full setup of your online store, hosting, domain, CRM, and automation tools.', tags: ['Shopify', 'CRM', 'Automation'] },
-            { icon: <TrendingUp />, title: 'Monthly Retainer', desc: 'Ongoing marketing operations, ad management, content creation, and automation upgrades.', tags: ['Ads', 'Content', 'Growth'] }
+            { icon: <Target />, title: 'Digital Marketing Audit', desc: 'A deep-dive business audit to diagnose bottlenecks and map a clear growth strategy.', tags: ['Strategy', 'SEO'] },
+            { icon: <PenTool />, title: 'Conversion Funnel Strategy', desc: 'High-converting landing pages and customer journeys that turn browsers into buyers.', tags: ['CRO', 'Funnels'] },
+            { icon: <ShoppingCart />, title: 'Shopify Store Setup', desc: 'End-to-end ecommerce setup, from theme design to inventory sync and fast checkouts.', tags: ['Ecommerce', 'Shopify'] },
+            { icon: <MessageSquare />, title: 'CRM & WhatsApp Automation', desc: 'Automate follow-ups, abandoned cart recovery, and lead nurturing effortlessly.', tags: ['CRM', 'Automation'] },
+            { icon: <TrendingUp />, title: 'Paid Ads Management', desc: 'Scalable ad campaigns across Meta and Google that deliver targeted traffic.', tags: ['Meta Ads', 'Google Ads'] },
+            { icon: <Check />, title: 'Lead Generation Systems', desc: 'Predictable inbound systems designed strictly for acquiring qualified business leads.', tags: ['Leads', 'Growth'] }
           ].map((svc, i) => (
             <div key={i} className="bg-white p-10 rounded-[2rem] border border-bdr-d shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-500 ease-out group">
               <div className="w-16 h-16 rounded-2xl bg-green border border-ink/10 flex items-center justify-center text-ink mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-sm">
@@ -826,52 +839,53 @@ export default function App() {
 
       {/* Process Section */}
       <Section id="features">
-        <Eyebrow centered>The process</Eyebrow>
-        <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
-          LIVE AND SELLING<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">IN 14 DAYS</span>
+        <Eyebrow centered>The Process</Eyebrow>
+        <h2 className="text-4xl md:text-6xl font-black text-ink tracking-tighter leading-none uppercase mb-6 text-center">
+          OUR DIGITAL MARKETING<br />
+          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block shadow-sm transform -rotate-1">AUTOMATION PROCESS</span>
         </h2>
-        <Subheading centered className="mb-20">A simple 5-step plan that takes your business from "just a shop" to a digital machine — starting from wherever you are today.</Subheading>
+        <Subheading centered className="mb-24 text-xl">A simple 5-step plan that takes your business from "just a shop" to a digital machine — delivered done-for-you, completely hands-off.</Subheading>
         
-        <div className="relative max-w-5xl mx-auto">
-          <div className="absolute top-1/2 left-0 w-full h-0.5 bg-bdr-d hidden md:block -translate-y-1/2" />
-          <div className="grid md:grid-cols-5 gap-8">
+        <div className="relative max-w-6xl mx-auto">
+          <div className="absolute top-10 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-bdr-d to-transparent hidden md:block" />
+          <div className="grid md:grid-cols-5 gap-6 md:gap-4">
             {[
               { phase: '01', title: 'Audit & Strategy', desc: 'Deep dive into your current metrics and bottlenecks.', icon: <Target /> },
-              { phase: '02', title: 'Infrastructure Build', desc: 'Setting up CRM, tracking, and automation tools.', icon: <Settings /> },
+              { phase: '02', title: 'Infra Build', desc: 'Setting up CRM, tracking, and automation tools.', icon: <Settings /> },
               { phase: '03', title: 'Asset Creation', desc: 'Landing pages, ad creatives, and email sequences.', icon: <PenTool /> },
-              { phase: '04', title: 'Traffic Generation', desc: 'Launching targeted ad campaigns and SEO.', icon: <Rocket /> },
-              { phase: '05', title: 'Launch & Optimisation', desc: 'Weekly reporting, KPI measurement, and retainer proposals.', icon: <Trophy /> }
+              { phase: '04', title: 'Traffic Gen', desc: 'Launching targeted ad campaigns and SEO.', icon: <Rocket /> },
+              { phase: '05', title: 'Optimisation', desc: 'Weekly reporting & KPI measurement.', icon: <Trophy /> }
             ].map((step, i) => (
-              <div key={i} className="relative z-10 text-center group">
-                <div className="w-16 h-16 rounded-2xl bg-green flex items-center justify-center mx-auto mb-6 text-ink shadow-sm group-hover:scale-110 transition-transform duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(200,240,96,0.6)]">
-                  <span className="font-black text-2xl group-hover:hidden">{step.phase}</span>
-                  <span className="hidden group-hover:block transition-all duration-300">
-                    {React.cloneElement(step.icon as any, { strokeWidth: 2 })}
+              <div key={i} className="relative z-10 text-center group bg-white md:bg-transparent p-6 md:p-0 rounded-2xl md:rounded-none border md:border-0 border-bdr shadow-sm md:shadow-none hover:-translate-y-2 md:hover:-translate-y-0 transition-all duration-300">
+                <div className="w-20 h-20 rounded-2xl bg-cream border border-bdr flex items-center justify-center mx-auto mb-6 text-ink shadow-sm group-hover:bg-green group-hover:border-green group-hover:scale-110 transition-all duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(200,240,96,0.6)]">
+                  <span className="font-black text-3xl text-gray-lt group-hover:hidden transition-all">{step.phase}</span>
+                  <span className="hidden group-hover:block transition-all duration-300 text-ink">
+                    {React.cloneElement(step.icon as any, { size: 32, strokeWidth: 2.5 })}
                   </span>
                 </div>
-                <h4 className="text-sm font-bold text-ink mb-2 tracking-tight group-hover:text-green-dk transition-colors duration-300">{step.title}</h4>
-                <p className="text-xs text-gray leading-relaxed group-hover:text-ink transition-colors duration-300">{step.desc}</p>
+                <h4 className="text-base font-black text-ink mb-3 tracking-tight group-hover:text-green-dk transition-colors duration-300">{step.title}</h4>
+                <p className="text-sm text-gray leading-relaxed group-hover:text-ink transition-colors duration-300 font-medium">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-20 bg-cream2 border border-bdr p-12 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden">
-          <div>
-            <h3 className="text-3xl md:text-4xl font-black text-ink tracking-tight mb-4 leading-tight">
+        <div className="mt-24 bg-white border border-bdr rounded-3xl p-10 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden shadow-2xl shadow-ink/5 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-green/5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <div className="relative z-10">
+            <h3 className="text-3xl md:text-5xl font-black text-ink tracking-tight mb-6 leading-tight">
               The free pilot model —<br />how it actually works.
             </h3>
-            <p className="text-gray text-lg leading-relaxed max-w-2xl">
-              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="bg-green text-ink px-1">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 7 days, guaranteed, with zero risk.
+            <p className="text-gray text-lg md:text-xl leading-relaxed max-w-3xl font-medium">
+              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="bg-green text-ink px-2 py-0.5 rounded shadow-sm">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 14 days, guaranteed, with zero operational risk.
             </p>
           </div>
           <button 
             onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-green text-ink px-10 py-5 font-black text-lg hover:bg-green-h transition-all whitespace-nowrap"
+            className="relative z-10 bg-ink text-white px-10 py-6 rounded-2xl font-black text-xl hover:bg-green hover:text-ink transition-all duration-300 whitespace-nowrap shadow-xl hover:shadow-green/20 hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 w-full lg:w-auto"
           >
-            Start free pilot
-            <ArrowRight size={20} className="inline ml-3" />
+            Start Your Free Pilot
+            <ArrowRight size={22} className="inline" />
           </button>
         </div>
 
@@ -882,7 +896,7 @@ export default function App() {
       <Section id="pricing" alt>
         <Eyebrow centered>Pricing</Eyebrow>
         <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
-          SIMPLE, HONEST<br />
+          AGENCY<br />
           <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">PRICING</span>
         </h2>
         <Subheading centered className="mb-16">Monthly retainers, 3-month minimum. Paid setup or free pilot — no hidden fees, no surprises.</Subheading>
@@ -941,12 +955,12 @@ export default function App() {
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
                 className={cn(
-                "w-full py-4 font-bold text-sm transition-all duration-300 hover:shadow-lg rounded-xl active:scale-95",
+                "w-full py-4 font-black text-sm transition-all duration-300 hover:shadow-lg rounded-xl flex items-center justify-center gap-2 group/btn",
                 plan.popular 
                   ? "bg-green text-ink hover:bg-green-h hover:shadow-green/20" 
                   : "bg-cream border-2 border-bdr text-ink hover:bg-ink hover:text-white hover:border-ink"
               )}>
-                Get started
+                {plan.popular ? 'Start Free Pilot' : 'Get Started'} <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           ))}
@@ -957,8 +971,8 @@ export default function App() {
       <Section id="results">
         <Eyebrow centered>Client results</Eyebrow>
         <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
-          SMMES GROWING<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">WITH OPTI-LINK</span>
+          SMALL BUSINESS<br />
+          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">MARKETING SUCCESS</span>
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
           {[
@@ -988,37 +1002,38 @@ export default function App() {
       {/* Why Us Section */}
       <Section id="why-us" className="bg-white">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          <div className="relative">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-green/20 rounded-full blur-3xl" />
+          <div className="relative group">
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-green/20 rounded-full blur-3xl group-hover:bg-green/40 transition-all duration-1000" />
             <img 
               src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=1000" 
-              alt="Team collaboration" 
-              className="rounded-[2.5rem] shadow-2xl relative z-10 border border-bdr"
+              alt="Team collaboration in our digital marketing agency" 
+              className="rounded-[2.5rem] shadow-2xl relative z-10 border border-bdr transform group-hover:scale-[1.02] transition-all duration-700"
               referrerPolicy="no-referrer"
+              loading="lazy"
             />
-            <div className="absolute -bottom-6 -right-6 bg-green text-ink p-8 shadow-2xl z-20 max-w-[240px]">
-              <div className="text-3xl font-black mb-2">100%</div>
+            <div className="absolute -bottom-6 -right-6 bg-green text-ink p-8 shadow-2xl z-20 max-w-[240px] transform group-hover:-translate-y-2 group-hover:translate-x-2 transition-all duration-500">
+              <div className="text-4xl font-black mb-2 tracking-tighter">100%</div>
               <p className="text-xs font-bold uppercase tracking-widest leading-relaxed">Focus on your business growth, not just tech.</p>
             </div>
           </div>
           <div>
             <Eyebrow>Why choose us</Eyebrow>
-            <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
-              WE DON'T JUST BUILD WEBSITES.<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">WE BUILD BUSINESSES.</span>
+            <h2 className="text-4xl md:text-6xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
+              A DIGITAL MARKETING AGENCY THAT<br />
+              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUILDS REVENUE SYSTEMS.</span>
             </h2>
             <div className="space-y-8 mt-10">
               {[
-                { title: 'We speak your language', desc: 'No technical jargon. We talk about customers, sales, and profit — the things that actually matter to your business.' },
-                { title: 'Results in 14 days', desc: 'We don\'t take months to deliver. Our systems are built to start working for you in two weeks or less.' },
-                { title: 'Zero risk to start', desc: 'With our free pilot model, you can see the system working before you commit to a long-term partnership.' }
+                { title: 'We Speak Your Language', desc: 'No technical jargon. We talk about customers, sales, and profit — the things that actually matter to your business.' },
+                { title: 'Live In 14 Days', desc: 'We don\'t take months to deliver. Our systems are built to start scaling your business in two weeks or less.' },
+                { title: 'Zero Risk To Start', desc: 'With our free pilot model, you can see the system generating ROI before you commit to a long-term partnership.' }
               ].map((item, i) => (
-                <div key={i} className="flex gap-6">
-                  <div className="w-10 h-10 bg-green text-ink flex items-center justify-center flex-shrink-0 font-bold">
+                <div key={i} className="flex gap-6 group cursor-default">
+                  <div className="w-12 h-12 bg-cream border border-bdr rounded-xl text-ink flex items-center justify-center flex-shrink-0 font-black group-hover:bg-green group-hover:border-green transition-colors duration-300 shadow-sm">
                     {i + 1}
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold text-ink mb-2 tracking-tight">{item.title}</h4>
+                    <h4 className="text-lg font-bold text-ink mb-2 tracking-tight group-hover:text-green-dk transition-colors">{item.title}</h4>
                     <p className="text-sm text-gray leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
@@ -1247,9 +1262,9 @@ export default function App() {
 
                   <a 
                     href="mailto:support@optilinkgroup.com"
-                    className="bg-ink text-white px-10 py-4 rounded-xl font-bold text-base flex items-center gap-3 hover:bg-green transition-all mx-auto"
+                    className="group bg-ink text-white px-10 py-5 rounded-xl font-black text-lg flex items-center justify-center gap-3 hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 shadow-2xl hover:shadow-green/20 max-w-sm mx-auto"
                   >
-                    <MessageSquare size={20} />
+                    <MessageSquare size={22} className="group-hover:scale-110 transition-transform" />
                     Email us to fast-track
                   </a>
                 </motion.div>
@@ -1277,9 +1292,9 @@ export default function App() {
             </div>
 
             {[
-              { title: 'Services', links: ['Ecommerce Setup', 'WhatsApp Automation', 'CRM & Workflows', 'Social Media', 'Paid Ads'] },
-              { title: 'Global Offices', links: ['Cape Town (HQ)', 'London', 'Dubai', 'Singapore'] },
-              { title: 'Legal & Security', links: ['Trust Center', 'SOC 2 Compliance', 'GDPR Readiness', 'Privacy Policy'] }
+              { title: 'Services', links: ['Shopify Store Setup', 'CRM & WhatsApp Automation', 'Paid Ads Management', 'Lead Generation Systems', 'Digital Marketing Audit'] },
+              { title: 'Partners & Platforms', links: ['Shopify', 'Google Ads', 'Meta Ads'] },
+              { title: 'Resources', links: ['Free Pilot', 'Case Studies', 'Trust Center', 'Privacy Policy'] }
             ].map((col, i) => (
               <div key={i}>
                 <h5 className="text-[0.65rem] font-black text-gray-lt uppercase tracking-[0.3em] mb-8">{col.title}</h5>
@@ -1287,8 +1302,10 @@ export default function App() {
                   {col.links.map(link => (
                     <li key={link}>
                       <a 
-                        href={link.includes('@') ? `mailto:${link}` : "#"} 
+                        href={link === 'Shopify' ? 'https://shopify.com' : link === 'Google Ads' ? 'https://ads.google.com' : link === 'Meta Ads' ? 'https://www.facebook.com/business/ads' : link.toLowerCase().replace(/\s+/g, '-')} 
                         className="text-sm text-gray hover:text-ink transition-colors"
+                        target={['Shopify', 'Google Ads', 'Meta Ads'].includes(link) ? '_blank' : '_self'}
+                        rel={['Shopify', 'Google Ads', 'Meta Ads'].includes(link) ? 'noopener noreferrer' : ''}
                       >
                         {link}
                       </a>
@@ -1301,6 +1318,11 @@ export default function App() {
 
           <div className="pt-8 border-t border-bdr flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-xs text-gray-lt">© 2026 Opti-Link Media Group. All rights reserved.</p>
+            <div className="flex gap-6 text-gray-lt">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">Instagram</a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">LinkedIn</a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">YouTube</a>
+            </div>
             <div className="flex gap-8 text-xs text-gray-lt">
               <a href="#" className="hover:text-ink transition-colors flex items-center gap-1"><ShieldCheck size={12} /> SOC 2 Type II Certified</a>
               <a href="#" className="hover:text-ink transition-colors">Privacy Policy</a>
