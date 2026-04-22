@@ -478,12 +478,18 @@ export default function App() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, 'surveys'), {
+      // Since we are running fully client-side / local storage for consumers, bypass firebase
+      await new Promise(resolve => setTimeout(resolve, 800));
+      const surveyData = {
         ...surveyForm,
         score: totalScore,
         answers: JSON.stringify(answers),
         createdAt: new Date().toISOString()
-      });
+      };
+      
+      const existingSurveys = JSON.parse(localStorage.getItem('optiLinkSurveys') || '[]');
+      localStorage.setItem('optiLinkSurveys', JSON.stringify([...existingSurveys, surveyData]));
+      
       setIsSubmitted(true);
     } catch (error) {
       console.error(error);
@@ -528,22 +534,22 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-cream selection:bg-green selection:text-ink">
+    <div className="min-h-screen bg-opti-white selection:bg-opti-green selection:text-opti-black">
       {/* Navigation */}
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6",
-        scrolled ? "bg-cream/95 backdrop-blur-xl border-b border-bdr py-4" : "py-8"
+        scrolled ? "bg-opti-white/95 backdrop-blur-xl border-b border-opti-black/5 py-4 shadow-sm" : "py-8 bg-transparent"
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setCurrentView('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <Logo className="w-12 h-12" />
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setCurrentView('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <Logo className="w-12 h-12 group-hover:scale-105 transition-transform duration-300" />
             <div className="leading-none">
-              <strong className="block text-xl font-black tracking-tight text-ink">Opti-Link</strong>
-              <span className="block text-[0.7rem] font-bold text-gray-lt uppercase tracking-[0.2em]">Media Group</span>
+              <strong className="block text-xl font-black tracking-tight text-opti-black">Opti-Link</strong>
+              <span className="block text-[0.7rem] font-bold text-opti-gray uppercase tracking-[0.2em]">Media Group</span>
             </div>
           </div>
           
-            <ul className="hidden md:flex items-center gap-12">
+            <ul className="hidden md:flex items-center gap-10">
               {[
                 { name: 'Features', id: 'features' },
                 { name: 'Solutions', id: 'services', dropdown: ['Freelancers', 'Creators', 'Influencers', 'Careers', 'Academy'] },
@@ -566,13 +572,13 @@ export default function App() {
                         document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
-                    className="text-base font-bold text-gray hover:text-ink transition-colors flex items-center gap-1"
+                    className="text-sm font-bold text-opti-gray hover:text-opti-black transition-colors flex items-center gap-1.5"
                   >
                     {item.name}
-                    {item.dropdown && <ChevronDown size={16} className="text-gray-lt" />}
+                    {item.dropdown && <ChevronDown size={14} className="text-opti-gray/60 group-hover:text-opti-black transition-colors" />}
                   </a>
                   {item.dropdown && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-bdr-d rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all overflow-hidden">
+                    <div className="absolute top-full left-0 mt-4 w-56 bg-opti-white border border-opti-black/5 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all overflow-hidden translate-y-2 group-hover:translate-y-0 duration-300 z-50">
                       {item.dropdown.map(sub => (
                         <a 
                           key={sub} 
@@ -582,7 +588,7 @@ export default function App() {
                             setCurrentView(sub.toLowerCase() as any);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="block px-5 py-3 text-sm font-bold text-gray hover:text-ink hover:bg-cream transition-colors border-b border-cream last:border-0"
+                          className="block px-5 py-3 text-sm font-bold text-opti-gray hover:text-opti-black hover:bg-opti-lightgray transition-colors border-b border-opti-black/5 last:border-0"
                         >
                           {sub}
                         </a>
@@ -596,7 +602,7 @@ export default function App() {
           <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => setCurrentView('auth')}
-              className="hidden md:block text-base font-bold text-ink px-5 py-2.5 hover:bg-cream rounded-lg transition-colors"
+              className="hidden md:block text-sm font-bold text-opti-black px-5 py-2.5 hover:bg-opti-lightgray rounded-xl transition-colors"
             >
               Client Login
             </button>
@@ -609,13 +615,13 @@ export default function App() {
                   document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="bg-ink text-white text-sm md:text-base font-bold px-5 py-3 md:px-7 md:py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10 whitespace-nowrap"
+              className="opti-button hidden md:flex min-w-[140px]"
             >
-              Get started
+              Get Started
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-ink hover:bg-cream rounded-lg transition-colors"
+              className="md:hidden p-2 text-opti-black hover:bg-opti-lightgray rounded-lg transition-colors"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -669,40 +675,49 @@ export default function App() {
       </nav>
 
       {currentView === 'landing' ? (
-        <>
+        <div className="bg-opti-white">
           {/* Hero Section */}
-          <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 min-h-[90vh] flex items-center overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,240,96,0.1)_0%,transparent_50%)] pointer-events-none" />
+          <section className="relative pt-32 pb-16 md:pt-48 md:pb-32 px-6 min-h-[95vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(182,255,59,0.08)_0%,transparent_50%)] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
+        <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 w-full">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col items-center w-full"
           >
-            <div className="mb-8">
-              <SphereLogo3D className="w-32 h-32 md:w-40 md:h-40" />
-            </div>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-opti-black text-opti-green font-mono text-[10px] font-bold uppercase tracking-widest mb-10 shadow-lg shadow-opti-green/20"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-opti-green animate-pulse" />
+              Opti-Link V2.0 is Live
+            </motion.div>
             
-            <h1 className="text-6xl md:text-8xl lg:text-[120px] font-black text-ink tracking-tighter leading-[0.9] uppercase mb-4">
-              DIGITAL<br />
-              <span className="bg-green text-ink px-6 py-2 mt-2 inline-block">MARKETING</span>
+            <h1 className="text-5xl md:text-7xl lg:text-[100px] font-black text-opti-black tracking-tighter leading-[0.9] mb-8 w-full">
+              YOUR DIGITAL INFRASTRUCTURE,<br />
+              <span className="text-opti-black bg-opti-green px-6 py-2 mt-2 inline-block rounded-lg shadow-opti-glow rotate-[-1deg]">CONSTRUCTED.</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray font-medium tracking-tight mb-12 max-w-3xl">
-              Thank you for joining this digital marketing workshop where we explore effective strategies and tools innovate collaborate optimize learn.
+            <p className="text-lg md:text-xl text-opti-gray font-medium tracking-tight mb-14 max-w-2xl leading-relaxed">
+              We are premier digital system and infrastructure constructors. We build, manage, and scale the digital engine that top agencies and modern brands use to capture leads and drive predictable revenue.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-16 w-full max-w-4xl justify-between items-center">
-              <div className="bg-green text-ink font-bold px-6 py-3 text-lg rounded-xl shadow-sm">
-                Presented by Opti-Link
-              </div>
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-ink text-white px-8 py-3.5 font-bold text-lg rounded-xl hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-green/20 active:scale-95"
+                className="w-full sm:w-auto px-8 py-4 bg-opti-black text-opti-white rounded-xl font-bold text-base hover:bg-opti-green hover:text-opti-black transition-all duration-300 ease-out flex items-center justify-center gap-3 active:scale-[0.98] shadow-opti-card"
               >
-                Getting Started
+                Calculate ROI <ArrowRight size={18} />
+              </button>
+              <button 
+                onClick={() => setCurrentView('auth')}
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-opti-black/10 text-opti-black rounded-xl font-bold text-base hover:bg-opti-black/5 transition-all duration-300 ease-out active:scale-[0.98]"
+              >
+                Client Portal
               </button>
             </div>
           </motion.div>
@@ -710,46 +725,48 @@ export default function App() {
       </section>
 
       {/* Trusted By Section */}
-      <div className="border-y border-bdr bg-white/50 py-10">
+      <div className="border-y border-opti-black/5 bg-opti-lightgray py-12">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-8">Trusted by enterprise scaling teams across 14 countries</p>
-          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-40 grayscale">
-            <div className="font-black text-2xl tracking-tighter">NEXUS<span className="font-light">GLOBAL</span></div>
-            <div className="font-black text-2xl tracking-widest">AURA</div>
-            <div className="font-black text-2xl tracking-tighter">VERTEX<span className="text-green">.</span></div>
-            <div className="font-black text-2xl tracking-tight">QUANTUM</div>
-            <div className="font-black text-2xl tracking-widest">ELEVATE</div>
+          <p className="text-center font-mono text-[10px] font-bold text-opti-gray uppercase tracking-[0.3em] mb-10">Trusted by modern scaling teams globally</p>
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 mix-blend-multiply">
+            <div className="font-black text-2xl tracking-tighter text-opti-black">NEXUS<span className="font-light">GLOBAL</span></div>
+            <div className="font-black text-2xl tracking-widest text-opti-black">AURA</div>
+            <div className="font-black text-2xl tracking-tighter text-opti-black">VERTEX<span className="text-opti-green">.</span></div>
+            <div className="font-black text-2xl tracking-tight text-opti-black">QUANTUM</div>
+            <div className="font-black text-2xl tracking-widest text-opti-black">ELEVATE</div>
           </div>
         </div>
       </div>
 
       {/* Logo Strip Section */}
-      <section className="bg-white py-24 px-6 overflow-hidden border-b border-bdr">
+      <section className="bg-opti-white py-32 px-6 overflow-hidden border-b border-opti-black/5">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1fr_2fr] gap-20 items-center">
           <div>
-            <Logo className="w-36 h-36 mb-8" />
-            <div className="font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-3">[About us]</div>
-            <p className="text-xl text-ink leading-relaxed max-w-xs font-medium">
-              We are a premier global digitisation and growth partner. We don't sell software — we <strong className="bg-green text-ink px-1">operate your entire digital engine</strong> so you can focus on what you do best.
+            <Logo className="w-32 h-32 mb-10" />
+            <div className="font-mono text-[10px] font-bold text-opti-gray uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+              <div className="w-4 h-[1px] bg-opti-black/20" /> About Opti-Link
+            </div>
+            <p className="text-xl text-opti-black leading-snug font-medium max-w-sm tracking-tight border-l-2 border-opti-green pl-6 py-2">
+              We are digital system and infrastructure constructors. We <strong className="bg-opti-green text-opti-black px-1.5 py-0.5 rounded">build and operate the digital engine</strong> that powers your entire growth pipeline.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { num: '150+', lbl: 'Stores digitised globally', change: 'Growing every month', icon: <TrendingUp size={14} /> },
-              { num: '14d', lbl: 'Average time to first results, guaranteed', change: 'Or no service fee', icon: <Rocket size={14} /> },
-              { num: 'R0', lbl: 'Upfront cost on our pilot model', change: 'Zero risk to start', icon: <Check size={14} /> },
-              { num: '3.2×', lbl: 'Average client ROI within 12 months', change: 'Outcome-focused only', icon: <TrendingUp size={14} /> },
-              { num: 'R42k', lbl: 'Average monthly revenue recovered per client', change: 'From automation alone', icon: <Banknote size={14} /> },
-              { num: '5', lbl: 'Pilot slots available per month — act fast', change: '2 spots remaining', icon: <Hourglass size={14} /> }
+              { num: '14d', lbl: 'Average time to results', change: 'Guaranteed success', icon: <Rocket size={14} /> },
+              { num: 'R0', lbl: 'Upfront cost on pilot', change: 'Zero risk to start', icon: <Check size={14} /> },
+              { num: '3.2×', lbl: 'Average client ROI', change: 'Within 12 months', icon: <TrendingUp size={14} /> },
+              { num: 'R42k', lbl: 'Monthly revenue recovered', change: 'From automation', icon: <Banknote size={14} /> },
+              { num: '5', lbl: 'Pilot slots available', change: '2 spots remaining', icon: <Hourglass size={14} /> }
             ].map((stat, i) => (
-              <div key={i} className="bg-cream2 p-8 border border-bdr">
-                <div className="flex items-center gap-2 text-green mb-4">
+              <div key={i} className="bg-opti-lightgray p-8 rounded-2xl border border-opti-black/5 hover:border-opti-green/50 transition-colors duration-300 group shadow-sm hover:shadow-md">
+                <div className="flex items-center gap-2 text-opti-green mb-6 bg-opti-white inline-flex px-3 py-1.5 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
                   {stat.icon}
-                  <span className="text-xs font-bold uppercase tracking-wider text-ink">{stat.change}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-opti-black">{stat.change}</span>
                 </div>
-                <div className="text-4xl font-black text-ink tracking-tighter mb-2">{stat.num}</div>
-                <div className="text-sm font-semibold text-gray">{stat.lbl}</div>
+                <div className="text-4xl font-black text-opti-black tracking-tighter mb-2 group-hover:-translate-y-1 transition-transform duration-300">{stat.num}</div>
+                <div className="text-sm font-semibold text-opti-gray">{stat.lbl}</div>
               </div>
             ))}
           </div>
@@ -757,20 +774,20 @@ export default function App() {
       </section>
 
       {/* Guarantee Bar */}
-      <div className="bg-white border-y border-bdr py-12 px-6">
+      <div className="bg-opti-white border-y border-opti-black/5 py-12 px-6">
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
           {[
-            { icon: <Target className="text-ink" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. Our costs are subsidized by software partners — you see results first, every time.' },
-            { icon: <Rocket className="text-ink" />, title: 'Live in 7 Days or We Walk', desc: 'If your digital system isn\'t fully functional within 7 days, no service fees are charged. Hard deadline, every client.' },
-            { icon: <TrendingUp className="text-ink" />, title: 'Revenue-Focused Only', desc: 'We don\'t report on vanity metrics. We track leads, conversions, and revenue attributed directly to your digital system.' }
+            { icon: <Target className="text-opti-black" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. Our costs are subsidized by software partners — you see results first, every time.' },
+            { icon: <Rocket className="text-opti-black" />, title: 'Live in 7 Days or We Walk', desc: 'If your digital system isn\'t fully functional within 7 days, no service fees are charged. Hard deadline, every client.' },
+            { icon: <TrendingUp className="text-opti-black" />, title: 'Revenue-Focused Only', desc: 'We don\'t report on vanity metrics. We track leads, conversions, and revenue attributed directly to your digital system.' }
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-5">
-              <div className="w-12 h-12 rounded-xl bg-green border border-ink/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-opti-green shadow-opti-glow flex items-center justify-center flex-shrink-0">
                 {item.icon}
               </div>
               <div>
-                <h4 className="text-base font-bold text-ink mb-1 tracking-tight">{item.title}</h4>
-                <p className="text-sm text-gray leading-relaxed">{item.desc}</p>
+                <h4 className="text-base font-bold text-opti-black mb-1.5 tracking-tight">{item.title}</h4>
+                <p className="text-sm text-opti-gray leading-relaxed font-medium">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -1303,7 +1320,7 @@ export default function App() {
       </footer>
 
       <Chatbot />
-        </>
+        </div>
       ) : (
         <SolutionPage 
           type={currentView} 
