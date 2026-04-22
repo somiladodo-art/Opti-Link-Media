@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   LayoutDashboard, 
@@ -25,6 +25,9 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { auth, db, logout } from '../lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 const Tooltip = ({ children, content }: { children: React.ReactNode, content: string }) => (
   <div className="relative group inline-flex items-center">
@@ -217,6 +220,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
+  const [userUid, setUserUid] = useState<string | null>(null);
   const [profileData, setProfileData] = useState({
     fullName: 'John Doe',
     email: 'john@example.com',
@@ -226,12 +230,39 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
     industry: 'Retail / E-commerce'
   });
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserUid(user.uid);
+        const userRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+          setProfileData(docSnap.data() as any);
+        }
+      } else {
+        onLogout();
+      }
+    });
+    return () => unsubscribe();
+  }, [onLogout]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!userUid) return;
     setIsSaving(true);
-    setTimeout(() => {
+    try {
+      const userRef = doc(db, 'users', userUid);
+      await updateDoc(userRef, profileData);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setIsSaving(false);
-    }, 1000);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    onLogout();
   };
 
   return (
@@ -297,7 +328,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
         </nav>
 
         <div className="p-4">
-          <button onClick={onLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-white/50 hover:bg-white/5 hover:text-white transition-all">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-white/50 hover:bg-white/5 hover:text-white transition-all">
             <LogOut size={18} />
             Log out
           </button>

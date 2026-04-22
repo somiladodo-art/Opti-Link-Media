@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useScroll } from 'motion/react';
 import { 
   ArrowRight, 
   Check, 
   ChevronDown, 
+  Menu,
+  X,
   MapPin, 
   ShoppingCart, 
   Store, 
@@ -33,9 +35,15 @@ import {
   ClipboardCheck, 
   Loader2,
   ShieldCheck,
-  PenTool
+  PenTool,
+  Users,
+  Wallet,
+  UserMinus,
+  Search
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { db } from './lib/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 import Chatbot from './components/Chatbot';
 import { Character3D } from './components/Character3D';
 import Auth from './components/Auth';
@@ -181,41 +189,38 @@ const RevenueCalculator = () => {
           
           <div className="space-y-6">
             <div>
-              <div className="flex justify-between mb-2">
+              <div className="flex justify-between mb-2 items-center">
                 <label className="text-xs font-bold text-ink uppercase tracking-wider">Monthly Visitors / Leads</label>
-                <span className="text-sm font-bold text-green">{visitors.toLocaleString()}</span>
+                <span className="text-xs font-bold bg-green text-ink px-2 py-0.5 rounded-md">{visitors.toLocaleString()}</span>
               </div>
               <input 
                 type="range" min="100" max="10000" step="100" 
                 value={visitors} onChange={(e) => setVisitors(Number(e.target.value))}
-                className="w-full h-2 bg-cream3 rounded-lg appearance-none cursor-pointer"
-                style={{ accentColor: '#c8f060' }}
+                className="w-full cursor-pointer focus:outline-none"
               />
             </div>
             
             <div>
-              <div className="flex justify-between mb-2">
+              <div className="flex justify-between mb-2 items-center">
                 <label className="text-xs font-bold text-ink uppercase tracking-wider">Current Conversion Rate</label>
-                <span className="text-sm font-bold text-green">{conversion}%</span>
+                <span className="text-xs font-bold bg-green text-ink px-2 py-0.5 rounded-md">{conversion}%</span>
               </div>
               <input 
                 type="range" min="0.1" max="5" step="0.1" 
                 value={conversion} onChange={(e) => setConversion(Number(e.target.value))}
-                className="w-full h-2 bg-cream3 rounded-lg appearance-none cursor-pointer"
-                style={{ accentColor: '#c8f060' }}
+                className="w-full cursor-pointer focus:outline-none"
               />
             </div>
 
             <div>
-              <div className="flex justify-between mb-2">
+              <div className="flex justify-between mb-2 items-center">
                 <label className="text-xs font-bold text-ink uppercase tracking-wider">Average Order Value (R)</label>
-                <span className="text-sm font-bold text-green">R {aov.toLocaleString()}</span>
+                <span className="text-xs font-bold bg-green text-ink px-2 py-0.5 rounded-md">R {aov.toLocaleString()}</span>
               </div>
               <input 
                 type="range" min="100" max="5000" step="50" 
                 value={aov} onChange={(e) => setAov(Number(e.target.value))}
-                className="w-full h-2 bg-cream3 rounded-lg appearance-none cursor-pointer"
-                style={{ accentColor: '#c8f060' }}
+                className="w-full cursor-pointer focus:outline-none"
               />
             </div>
           </div>
@@ -247,14 +252,206 @@ const RevenueCalculator = () => {
 
 // --- Main App ---
 
+const QUESTIONS = [
+  {
+    id: 1,
+    title: "What type of business do you run?",
+    sub: "This helps us tailor your personalised quick-win plan.",
+    cols: 1,
+    options: [
+      { val: 'ecom', title: 'Ecommerce / Online Store', sub: 'I sell products online or want to start', score: 1, icon: <ShoppingCart /> },
+      { val: 'retail', title: 'Retail / Physical Store', sub: 'Brick & mortar, want to go online', score: 1, icon: <Store /> },
+      { val: 'services', title: 'Services / Consulting', sub: 'I sell expertise, skills, or my time', score: 1, icon: <Briefcase /> },
+      { val: 'food', title: 'Food, Health & Beauty', sub: 'Restaurant, salon, wellness, FMCG', score: 1, icon: <Utensils /> }
+    ]
+  },
+  {
+    id: 2,
+    title: "Primary target audience?",
+    sub: "Who typically buys from you?",
+    cols: 2,
+    options: [
+      { val: 'b2b', title: 'B2B (Business to Business)', sub: 'I sell to other businesses', score: 1, icon: <Briefcase /> },
+      { val: 'b2c', title: 'B2C (Business to Consumer)', sub: 'I sell directly to end users', score: 1, icon: <Users /> },
+      { val: 'both', title: 'Both B2B & B2C', sub: 'I have a mix of clients', score: 2, icon: <Globe /> },
+      { val: 'unsure', title: 'Not entirely sure yet', sub: 'Still figuring out my ideal customer', score: 0, icon: <HelpCircle /> }
+    ]
+  },
+  {
+    id: 3,
+    title: "How old is your business?",
+    sub: "Understanding your current stage of growth.",
+    cols: 2,
+    options: [
+      { val: 'idea', title: 'Just starting / Idea phase', sub: 'Pre-revenue or very early days', score: 0, icon: <Leaf /> },
+      { val: '1-3y', title: '1-3 years old', sub: 'Finding product-market fit', score: 1, icon: <Rocket /> },
+      { val: '3-5y', title: '3-5 years old', sub: 'Growing and stabilizing', score: 2, icon: <TrendingUp /> },
+      { val: '5y+', title: '5+ years established', sub: 'Looking to optimize and scale', score: 3, icon: <Diamond /> }
+    ]
+  },
+  {
+    id: 4,
+    title: "How much money does the business make monthly?",
+    sub: "This helps us recommend the right growth plan for you.",
+    cols: 1,
+    options: [
+      { val: '0-10k', title: 'R0 – R10,000 per month', sub: 'Pre-revenue or just getting started', score: 0, icon: <Leaf /> },
+      { val: '10-50k', title: 'R10,000 – R50,000 per month', sub: 'Early traction, ready to scale', score: 1, icon: <TrendingUp /> },
+      { val: '50-150k', title: 'R50,000 – R150,000 per month', sub: 'Growing fast, need systems to keep up', score: 2, icon: <Rocket /> },
+      { val: '150k+', title: 'R150,000+ per month', sub: 'Established — want to optimise and dominate', score: 3, icon: <Diamond /> }
+    ]
+  },
+  {
+    id: 5,
+    title: "Main source of current leads/sales?",
+    sub: "Where does your revenue come from mostly today?",
+    cols: 2,
+    options: [
+      { val: 'word', title: 'Word of Mouth / Referrals', sub: 'Organic but unpredictable', score: 1, icon: <MessageSquare /> },
+      { val: 'social_organic', title: 'Organic Social Media', sub: 'Posting on Instagram, Facebook, TikTok', score: 1, icon: <Smartphone /> },
+      { val: 'paid_ads', title: 'Paid Ads', sub: 'Google Ads, Meta Ads running', score: 3, icon: <Megaphone /> },
+      { val: 'walk_in', title: 'Physical Walk-ins', sub: 'Foot traffic to a location', score: 1, icon: <MapPin /> }
+    ]
+  },
+  {
+    id: 6,
+    title: "How do people find you online right now?",
+    sub: "Be honest — this helps us find the best way to help you.",
+    cols: 1,
+    options: [
+      { val: 'none', title: 'They don\'t', sub: 'No website, no Facebook page, nothing yet', score: 0, icon: <Ban /> },
+      { val: 'social', title: 'Mostly Facebook or Instagram', sub: 'I have pages but no website or online store', score: 1, icon: <Smartphone /> },
+      { val: 'website', title: 'I have a website or store', sub: 'But it doesn\'t bring in many new customers', score: 2, icon: <Globe /> },
+      { val: 'partial', title: 'I have a system running', sub: 'But I know it could be doing much better', score: 3, icon: <Settings /> }
+    ]
+  },
+  {
+    id: 7,
+    title: "Biggest bottleneck in growth right now?",
+    sub: "What is physically stopping you from scaling your revenue?",
+    cols: 2,
+    options: [
+      { val: 'leads', title: 'Not enough leads/traffic', sub: 'People just don\'t know we exist', score: 1, icon: <UserMinus /> },
+      { val: 'sales', title: 'Low conversion to sales', sub: 'Lots of traffic, nobody buys', score: 2, icon: <Banknote /> },
+      { val: 'fulfillment', title: 'Operations & Fulfillment', sub: 'We can\'t handle more customers yet', score: 3, icon: <Timer /> },
+      { val: 'cash', title: 'Cashflow bottlenecks', sub: 'No capital to invest in marketing', score: 1, icon: <Wallet /> }
+    ]
+  },
+  {
+    id: 8,
+    title: "If you could wave a magic wand and fix one part of your sales process, what would it be?",
+    sub: "Pick the one that costs you the most money or time.",
+    cols: 2,
+    options: [
+      { val: 'leads', title: 'Getting more qualified leads', sub: 'I need a steady stream of new customers', score: 2, icon: <TrendingDown /> },
+      { val: 'convert', title: 'Converting more leads into sales', sub: 'I have enquiries but they don\'t buy', score: 2, icon: <Banknote /> },
+      { val: 'repeat', title: 'Getting customers to buy again', sub: 'I need to turn one-time buyers into loyal fans', score: 2, icon: <Repeat /> },
+      { val: 'time', title: 'Saving time on admin and follow-ups', sub: 'I\'m too busy running the business to market it', score: 2, icon: <Timer /> }
+    ]
+  },
+  {
+    id: 9,
+    title: "What does your current sales process look like?",
+    sub: "How does a lead actually turn into a paying customer?",
+    cols: 1,
+    options: [
+      { val: 'manual', title: 'Manual WhatsApp / Phone calls', sub: 'I have to reply manually to every message', score: 1, icon: <Smartphone /> },
+      { val: 'ecom_auto', title: 'Automated E-commerce', sub: 'They buy on my site without speaking to me', score: 3, icon: <ShoppingCart /> },
+      { val: 'no_process', title: 'No structured process', sub: 'It varies every time', score: 0, icon: <HelpCircle /> },
+      { val: 'physical', title: 'Physical store only', sub: 'They have to walk in to buy', score: 1, icon: <Store /> }
+    ]
+  },
+  {
+    id: 10,
+    title: "What is your monthly marketing budget?",
+    sub: "This helps us identify what tools and strategies we can realistically deploy.",
+    cols: 2,
+    options: [
+      { val: '0', title: 'Bootstrapping (Zero)', sub: 'I need organic strategies first', score: 0, icon: <Leaf /> },
+      { val: 'under_5k', title: 'Under R5,000 /mo', sub: 'Starting some base campaigns', score: 1, icon: <Banknote /> },
+      { val: '5k_20k', title: 'R5k – R20k /mo', sub: 'Ready to scale proven ads', score: 2, icon: <TrendingUp /> },
+      { val: '20k_plus', title: 'R20,000+ /mo', sub: 'Aggressive growth phase', score: 3, icon: <Rocket /> }
+    ]
+  },
+  {
+    id: 11,
+    title: "What is the biggest opportunity you're currently missing out on?",
+    sub: "Select the one thing you need most.",
+    cols: 2,
+    options: [
+      { val: 'store', title: 'An online store that sells 24/7', sub: 'Professional site + payment gateway', score: 1, icon: <ShoppingCart /> },
+      { val: 'pipeline', title: 'Automated WhatsApp & CRM pipeline', sub: 'Sales follow-up running 24/7', score: 1, icon: <MessageSquare /> },
+      { val: 'traffic', title: 'Targeted social media & paid ads', sub: 'More visibility and high-quality leads', score: 1, icon: <Megaphone /> },
+      { val: 'all', title: 'A full end-to-end digital growth engine', sub: 'Everything integrated for maximum results', score: 2, icon: <Trophy /> }
+    ]
+  },
+  {
+    id: 12,
+    title: "How comfortable are you with digital tools and tech?",
+    sub: "We will tailor the implementation accordingly.",
+    cols: 2,
+    options: [
+      { val: 'hate_tech', title: 'I hate tech', sub: 'I just want you to do it for me', score: 1, icon: <Ban /> },
+      { val: 'basic', title: 'I can manage the basics', sub: 'I know how to post and reply', score: 1, icon: <Smartphone /> },
+      { val: 'love_tools', title: 'I love tools and automation', sub: 'I enjoy tweaking the systems', score: 2, icon: <Settings /> },
+      { val: 'team', title: 'I have a team for this', sub: 'I manage the people who do it', score: 3, icon: <Users /> }
+    ]
+  },
+  {
+    id: 13,
+    title: "What is your top goal for the next 6 months?",
+    sub: "What does success look like for you soon?",
+    cols: 2,
+    options: [
+      { val: 'double', title: 'Double my revenue', sub: 'Aggressive scaling in mind', score: 2, icon: <TrendingUp /> },
+      { val: 'save_time', title: 'Save 10+ hours a week', sub: 'I need to step back from the daily grind', score: 2, icon: <Timer /> },
+      { val: 'launch', title: 'Launch a new product/service', sub: 'Focusing on expanding offerings', score: 1, icon: <Rocket /> },
+      { val: 'predictable', title: 'Build a predictable system', sub: 'Smoothing out the cash flow rollercoaster', score: 3, icon: <ShieldCheck /> }
+    ]
+  },
+  {
+    id: 14,
+    title: "What's your biggest frustration with current marketing agencies/tools?",
+    sub: "We want to ensure we don't repeat the same mistakes.",
+    cols: 2,
+    options: [
+      { val: 'cost', title: 'Costs too much upfront', sub: 'High retainers with no guarantee', score: 1, icon: <Banknote /> },
+      { val: 'no_roi', title: 'Cannot see the ROI', sub: 'No clear reporting or tracking', score: 2, icon: <Search /> },
+      { val: 'time_drain', title: 'Takes too much of my time', sub: 'I end up managing them', score: 2, icon: <Timer /> },
+      { val: 'confusion', title: 'Too complicated', sub: 'Don\'t know what actually works', score: 1, icon: <HelpCircle /> }
+    ]
+  },
+  {
+    id: 15,
+    title: "How would you like to start?",
+    sub: "There's no wrong answer — we'll make it work for you.",
+    cols: 1,
+    options: [
+      { val: 'pilot', title: 'Free pilot — R0 upfront', sub: 'I activate the software tools. We see results first, then decide.', score: 2, icon: <HelpCircle /> },
+      { val: 'paid', title: 'Paid setup — fastest delivery', sub: 'I pay the once-off setup fee and we start immediately with priority build and 7-day delivery.', score: 3, icon: <Rocket /> },
+      { val: 'unsure', title: 'Not sure yet — I want advice first', sub: 'Show me the numbers and the plan on the call, then I\'ll decide with confidence.', score: 1, icon: <MessageSquare /> }
+    ]
+  }
+];
+
 export default function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'auth' | 'dashboard' | 'freelancers' | 'creators' | 'influencers' | 'careers' | 'academy' | 'blog'>('landing');
   const [scrolled, setScrolled] = useState(false);
   const [surveyStep, setSurveyStep] = useState(1);
   const [answers, setAnswers] = useState<Record<number, { val: string, score: number }>>({});
+  const [surveyForm, setSurveyForm] = useState({
+    fullName: '',
+    businessName: '',
+    phone: '',
+    email: '',
+    website: '',
+    interest: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -267,10 +464,10 @@ export default function App() {
   };
 
   const nextStep = () => {
-    if (surveyStep === 6) {
+    if (surveyStep === 15) {
       const score = Object.values(answers).reduce((acc, curr) => acc + curr.score, 0);
       setTotalScore(score);
-      setSurveyStep(7); // Squeeze page
+      setSurveyStep(16); // Squeeze page
     } else {
       setSurveyStep(prev => prev + 1);
     }
@@ -278,27 +475,36 @@ export default function App() {
 
   const prevStep = () => setSurveyStep(prev => prev - 1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await addDoc(collection(db, 'surveys'), {
+        ...surveyForm,
+        score: totalScore,
+        answers: JSON.stringify(answers),
+        createdAt: new Date().toISOString()
+      });
       setIsSubmitted(true);
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getPhaseInfo = () => {
-    if (totalScore <= 5) return {
+    if (totalScore <= 15) return {
       phase: 'Phase 1 — Foundation',
       title: 'Your digital engine is ready to build.',
       sub: "You're leaving serious revenue on the table without an automated system. We can build your entire digital engine from scratch and have it live in 7 days — at zero upfront cost on our pilot model."
     };
-    if (totalScore <= 8) return {
+    if (totalScore <= 22) return {
       phase: 'Phase 2 — Automation',
       title: 'You have presence — now you need automation.',
       sub: "You're generating traction but leads are slipping through. A WhatsApp pipeline and CRM will immediately recover lost revenue and convert more enquiries into paying customers."
     };
-    if (totalScore <= 11) return {
+    if (totalScore <= 32) return {
       phase: 'Phase 3 — Visibility & Traffic',
       title: 'Your system is solid. Time to flood it with leads.',
       sub: "Your digital foundation is working well. The next lever is consistent traffic — targeted social media and paid ad campaigns will fill your pipeline with qualified leads at scale."
@@ -324,6 +530,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-cream selection:bg-green selection:text-ink">
+      {/* Scroll Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1.5 bg-green transform origin-left z-[300]"
+        style={{ scaleX: scrollYProgress }}
+      />
+      
       {/* Navigation */}
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6",
@@ -388,7 +600,7 @@ export default function App() {
               ))}
             </ul>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => setCurrentView('auth')}
               className="hidden md:block text-base font-bold text-ink px-5 py-2.5 hover:bg-cream rounded-lg transition-colors"
@@ -404,49 +616,101 @@ export default function App() {
                   document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="bg-ink text-white text-base font-bold px-7 py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10"
+              className="group bg-ink text-white text-sm md:text-base font-bold px-5 py-3 md:px-7 md:py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10 whitespace-nowrap flex items-center justify-center gap-2"
             >
-              Get started
+              Get started <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-ink hover:bg-cream rounded-lg transition-colors"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden overflow-hidden bg-white border-b border-bdr shadow-xl max-h-[80vh] overflow-y-auto"
+            >
+              <div className="px-6 py-6 space-y-6">
+                {[
+                  { label: 'Services', items: ['Shopify Build', 'Meta Ads', 'CRM & WhatsApp Automation', 'Brand Identity'] },
+                  { label: 'Platform', items: ['Features', 'Integrations', 'Pricing', 'Security'] },
+                  { label: 'Resources', items: ['Blog', 'Case Studies', 'ROI Calculator', 'Academy'] },
+                  { label: 'Login', action: () => { setCurrentView('auth'); setMobileMenuOpen(false); }, isAuth: true }
+                ].map((cat, i) => (
+                  <div key={i} className="border-b border-bdr pb-6 last:border-0 last:pb-0">
+                    {cat.isAuth ? (
+                      <button 
+                        onClick={cat.action}
+                        className="text-lg font-black text-ink uppercase tracking-tight hover:text-green-dk"
+                      >
+                        {cat.label}
+                      </button>
+                    ) : (
+                      <>
+                        <h4 className="text-lg font-black text-ink uppercase tracking-tight mb-4">{cat.label}</h4>
+                        <ul className="space-y-3 pl-2 border-l-2 border-green/30">
+                          {cat.items?.map(item => (
+                            <li key={item}>
+                              <a href="#" className="block text-base font-bold text-gray hover:text-ink transition-colors">
+                                {item}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {currentView === 'landing' ? (
         <>
           {/* Hero Section */}
           <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 min-h-[90vh] flex items-center overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,240,96,0.1)_0%,transparent_50%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,240,96,0.1)_0%,transparent_50%)] pointer-events-none animate-pulse duration-[10s]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(200,240,96,0.05)_0%,transparent_40%)] pointer-events-none" />
         
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 30, filter: 'blur(5px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex flex-col items-center w-full"
           >
             <div className="mb-8">
               <SphereLogo3D className="w-32 h-32 md:w-40 md:h-40" />
             </div>
             
-            <h1 className="text-6xl md:text-8xl lg:text-[120px] font-black text-ink tracking-tighter leading-[0.9] uppercase mb-4">
-              DIGITAL<br />
-              <span className="bg-green text-ink px-6 py-2 mt-2 inline-block">MARKETING</span>
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[120px] font-black text-ink tracking-tighter leading-[0.9] uppercase mb-6">
+              DIGITAL <br className="hidden md:block" />
+              <span className="bg-green text-ink px-4 py-1.5 md:px-6 md:py-2 mt-2 md:mt-4 inline-block transform md:-rotate-1">MARKETING</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray font-medium tracking-tight mb-12 max-w-3xl">
               Thank you for joining this digital marketing workshop where we explore effective strategies and tools innovate collaborate optimize learn.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-16 w-full max-w-4xl justify-between items-center">
-              <div className="bg-green text-ink font-bold px-6 py-3 text-lg">
-                Presented by Opti-Link
+            <div className="flex flex-wrap justify-center gap-4 mb-16 w-full max-w-4xl items-center">
+              <div className="bg-green text-ink font-bold px-6 py-3 text-sm md:text-lg rounded-xl shadow-sm flex items-center gap-2">
+                <Check size={18} strokeWidth={4} /> Presented by Opti-Link
               </div>
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-green text-ink px-8 py-3 font-bold text-lg hover:bg-green-h transition-all"
+                className="group bg-ink text-white px-8 py-3.5 font-bold text-lg rounded-xl hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-green/20 active:scale-95 flex items-center gap-2"
               >
-                Getting Started
+                Getting Started <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
               </button>
             </div>
           </motion.div>
@@ -454,10 +718,10 @@ export default function App() {
       </section>
 
       {/* Trusted By Section */}
-      <div className="border-y border-bdr bg-white/50 py-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-8">Trusted by enterprise scaling teams across 14 countries</p>
-          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-40 grayscale">
+      <div className="border-y border-bdr bg-gradient-to-b from-white/80 to-white/30 py-12 relative overflow-hidden backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-10">Trusted by enterprise scaling teams across 14 countries</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-24 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
             <div className="font-black text-2xl tracking-tighter">NEXUS<span className="font-light">GLOBAL</span></div>
             <div className="font-black text-2xl tracking-widest">AURA</div>
             <div className="font-black text-2xl tracking-tighter">VERTEX<span className="text-green">.</span></div>
@@ -542,15 +806,15 @@ export default function App() {
             { icon: <ShoppingCart />, title: 'Implementation Package', desc: 'Full setup of your online store, hosting, domain, CRM, and automation tools.', tags: ['Shopify', 'CRM', 'Automation'] },
             { icon: <TrendingUp />, title: 'Monthly Retainer', desc: 'Ongoing marketing operations, ad management, content creation, and automation upgrades.', tags: ['Ads', 'Content', 'Growth'] }
           ].map((svc, i) => (
-            <div key={i} className="bg-white p-10 rounded-2xl border border-bdr-d shadow-sm hover:shadow-xl transition-all group">
-              <div className="w-16 h-16 rounded-xl bg-green border border-ink/10 flex items-center justify-center text-ink mb-8 group-hover:scale-110 transition-transform">
-                {svc.icon}
+            <div key={i} className="bg-white p-10 rounded-[2rem] border border-bdr-d shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-500 ease-out group">
+              <div className="w-16 h-16 rounded-2xl bg-green border border-ink/10 flex items-center justify-center text-ink mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-sm">
+                {React.cloneElement(svc.icon as any, { strokeWidth: 1.5, className: 'group-hover:stroke-[2px] transition-all duration-300' })}
               </div>
               <h3 className="text-xl font-black text-ink mb-4 tracking-tight">{svc.title}</h3>
               <p className="text-sm text-gray leading-relaxed mb-8">{svc.desc}</p>
               <div className="flex flex-wrap gap-2">
                 {svc.tags.map(tag => (
-                  <span key={tag} className="font-mono text-[10px] font-bold bg-cream border border-bdr-d rounded-md px-3 py-1.5 text-gray uppercase tracking-wider">
+                  <span key={tag} className="font-mono text-[10px] font-bold bg-cream border border-bdr-d rounded-md px-3 py-1.5 text-gray uppercase tracking-wider group-hover:bg-green/10 group-hover:border-green/30 group-hover:text-green-dk transition-colors duration-300">
                     {tag}
                   </span>
                 ))}
@@ -579,12 +843,15 @@ export default function App() {
               { phase: '04', title: 'Traffic Generation', desc: 'Launching targeted ad campaigns and SEO.', icon: <Rocket /> },
               { phase: '05', title: 'Launch & Optimisation', desc: 'Weekly reporting, KPI measurement, and retainer proposals.', icon: <Trophy /> }
             ].map((step, i) => (
-              <div key={i} className="relative z-10 text-center">
-                <div className="w-16 h-16 bg-green flex items-center justify-center mx-auto mb-6 text-ink shadow-sm">
-                  <span className="font-black text-2xl">{step.phase}</span>
+              <div key={i} className="relative z-10 text-center group">
+                <div className="w-16 h-16 rounded-2xl bg-green flex items-center justify-center mx-auto mb-6 text-ink shadow-sm group-hover:scale-110 transition-transform duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(200,240,96,0.6)]">
+                  <span className="font-black text-2xl group-hover:hidden">{step.phase}</span>
+                  <span className="hidden group-hover:block transition-all duration-300">
+                    {React.cloneElement(step.icon as any, { strokeWidth: 2 })}
+                  </span>
                 </div>
-                <h4 className="text-sm font-bold text-ink mb-2 tracking-tight">{step.title}</h4>
-                <p className="text-xs text-gray leading-relaxed">{step.desc}</p>
+                <h4 className="text-sm font-bold text-ink mb-2 tracking-tight group-hover:text-green-dk transition-colors duration-300">{step.title}</h4>
+                <p className="text-xs text-gray leading-relaxed group-hover:text-ink transition-colors duration-300">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -643,13 +910,13 @@ export default function App() {
             }
           ].map((plan, i) => (
             <div key={i} className={cn(
-              "relative p-10 rounded-3xl border transition-all duration-300",
+              "relative p-10 rounded-3xl border transition-all duration-500 ease-out",
               plan.popular 
-                ? "bg-ink border-ink scale-105 shadow-2xl shadow-ink/20 z-10" 
-                : "bg-cream border-bdr hover:border-bdr-d"
+                ? "bg-ink border-ink scale-105 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] z-10 hover:scale-[1.07]" 
+                : "bg-white border-bdr hover:border-green/30 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2"
             )}>
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green text-ink text-[0.65rem] font-black px-5 py-1.5 uppercase tracking-widest shadow-lg">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green text-ink text-[0.65rem] font-black px-5 py-1.5 uppercase tracking-widest shadow-lg rounded-full">
                   Most Popular
                 </div>
               )}
@@ -657,7 +924,7 @@ export default function App() {
                 {plan.name}
               </div>
               <div className={cn("text-5xl font-black tracking-tighter mb-2", plan.popular ? "text-white" : "text-ink")}>
-                {plan.price}<span className={cn("text-sm font-normal tracking-normal", plan.popular ? "text-white/30" : "text-gray-lt")}>/mo</span>
+                {plan.price}<span className={cn("text-sm font-normal tracking-normal transition-colors", plan.popular ? "text-white/30" : "text-gray-lt")}>/mo</span>
               </div>
               <p className={cn("text-[0.75rem] leading-relaxed mb-8", plan.popular ? "text-white/30" : "text-gray-lt")}>
                 {plan.note}
@@ -666,7 +933,7 @@ export default function App() {
               <ul className="space-y-4 mb-10">
                 {plan.feats.map(feat => (
                   <li key={feat} className={cn("flex items-start gap-3 text-sm font-bold", plan.popular ? "text-white/70" : "text-ink3")}>
-                    <Check size={16} className={cn("mt-0.5 flex-shrink-0", plan.popular ? "text-green" : "text-ink")} />
+                    <Check size={16} className={cn("mt-0.5 flex-shrink-0 transition-transform duration-300", plan.popular ? "text-green" : "text-ink")} />
                     {feat}
                   </li>
                 ))}
@@ -674,10 +941,10 @@ export default function App() {
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
                 className={cn(
-                "w-full py-4 font-bold text-sm transition-all active:scale-95",
+                "w-full py-4 font-bold text-sm transition-all duration-300 hover:shadow-lg rounded-xl active:scale-95",
                 plan.popular 
-                  ? "bg-green text-ink hover:bg-green-h" 
-                  : "bg-transparent border-2 border-bdr-d text-ink hover:bg-ink hover:text-white hover:border-ink"
+                  ? "bg-green text-ink hover:bg-green-h hover:shadow-green/20" 
+                  : "bg-cream border-2 border-bdr text-ink hover:bg-ink hover:text-white hover:border-ink"
               )}>
                 Get started
               </button>
@@ -699,13 +966,13 @@ export default function App() {
             { name: 'Kagiso Dlamini', role: 'Co-founder, Kasi Fresh Foods — Durban', quote: "Month two we saw a 40% increase in repeat orders after Opti-Link built our CRM and WhatsApp pipeline. The retainer pays for itself every single month without question.", color: '#1e3a8a' },
             { name: 'Nandi Pieterse', role: 'Director, NP Design Studio — Cape Town', quote: "They built a lead funnel and automated my quote follow-ups. I booked R80,000 in new contracts in 30 days. As a service business I didn't think this model applied to me.", color: '#6d28d9' }
           ].map((testi, i) => (
-            <div key={i} className="bg-cream border border-bdr rounded-3xl p-10 flex flex-col gap-8">
-              <div className="flex gap-1 text-ink">
+            <div key={i} className="bg-cream border border-bdr rounded-[2rem] p-10 flex flex-col gap-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 hover:bg-white group cursor-default">
+              <div className="flex gap-1 text-ink/20 group-hover:text-green transition-colors duration-300">
                 {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
               </div>
-              <p className="text-lg text-gray italic leading-relaxed flex-1">"{testi.quote}"</p>
+              <p className="text-lg text-gray italic leading-relaxed flex-1 group-hover:text-ink transition-colors duration-300">"{testi.quote}"</p>
               <div className="pt-8 border-t border-bdr flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-xs tracking-widest" style={{ backgroundColor: testi.color }}>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-xs tracking-widest shadow-sm group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: testi.color }}>
                   {testi.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
@@ -765,194 +1032,105 @@ export default function App() {
       <Section id="survey" className="bg-cream2">
         <div className="text-center mb-16">
           <Eyebrow centered>Free Business Audit</Eyebrow>
-          <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
-            FIND OUT EXACTLY WHERE YOUR<br />
-            <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUSINESS IS LOSING MONEY</span>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-ink tracking-tighter leading-[1.1] uppercase mb-6 text-center max-w-5xl mx-auto">
+            FIND OUT EXACTLY WHERE YOUR <br className="hidden lg:block" />
+            <span className="bg-green text-ink px-3 py-1 md:px-5 md:py-2 mt-2 md:mt-4 inline-block whitespace-normal md:whitespace-nowrap rounded-sm transform md:-rotate-1">BUSINESS IS LOSING MONEY</span>
           </h2>
-          <Subheading centered>Answer 6 simple questions. We'll show you how to find more customers and grow your profit — free, with no strings attached.</Subheading>
+          <Subheading centered>Answer 15 simple questions. We'll show you how to find more customers and grow your profit — free, with no strings attached.</Subheading>
         </div>
 
         <div className="max-w-2xl mx-auto">
           <div className="bg-white border border-bdr rounded-[2rem] overflow-hidden shadow-2xl shadow-ink/5">
             <AnimatePresence mode="wait">
-              {surveyStep <= 6 ? (
+              {surveyStep <= 15 ? (
                 <motion.div
-                  key="survey"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                  key={`survey-step-${surveyStep}`}
+                  initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, y: -15, filter: 'blur(4px)' }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8 }}
                 >
                   <div className="p-8 pb-0">
                     <div className="flex justify-between items-center mb-4">
                       <span className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest">Business Health Check</span>
-                      <span className="text-[0.65rem] font-bold text-ink bg-green px-2 py-1 rounded uppercase tracking-widest">Step {surveyStep} of 6</span>
+                      <span className="text-[0.65rem] font-bold text-ink bg-green px-2 py-1 rounded uppercase tracking-widest">Step {surveyStep} of 15</span>
                     </div>
                     <div className="h-1 w-full bg-cream2 rounded-full overflow-hidden">
                       <motion.div 
                         className="h-full bg-green"
-                        animate={{ width: `${(surveyStep / 6) * 100}%` }}
+                        animate={{ width: `${(surveyStep / 15) * 100}%` }}
+                        transition={{ ease: "easeInOut", duration: 0.5 }}
                       />
                     </div>
                   </div>
 
                   <div className="p-12">
-                    {surveyStep === 1 && (
-                      <div className="space-y-10">
-                        <div>
-                          <h3 className="text-3xl font-black text-ink tracking-tight mb-3">What type of business do you run?</h3>
-                          <p className="text-base text-gray">This helps us tailor your personalised quick-win plan.</p>
-                        </div>
-                        <div className="grid grid-cols-1 gap-4">
-                          {[
-                            { val: 'ecom', title: 'Ecommerce / Online Store', sub: 'I sell products online or want to start', icon: <ShoppingCart /> },
-                            { val: 'retail', title: 'Retail / Physical Store', sub: 'Brick & mortar, want to go online', icon: <Store /> },
-                            { val: 'services', title: 'Services / Consulting', sub: 'I sell expertise, skills, or my time', icon: <Briefcase /> },
-                            { val: 'food', title: 'Food, Health & Beauty', sub: 'Restaurant, salon, wellness, FMCG', icon: <Utensils /> }
-                          ].map(opt => (
-                            <button
-                              key={opt.val}
-                              onClick={() => handleAnswer(1, opt.val, 1)}
-                              className={cn(
-                                "flex items-center gap-4 p-5 rounded-2xl border-2 text-left transition-all group",
-                                answers[1]?.val === opt.val ? "bg-green/10 border-green" : "bg-cream border-cream3 hover:border-green/30 hover:bg-green/5"
-                              )}
-                            >
-                              <div className={cn(
-                                "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
-                                answers[1]?.val === opt.val ? "bg-green text-ink" : "bg-white border border-bdr-d text-ink group-hover:scale-110"
-                              )}>
-                                {opt.icon}
-                              </div>
-                              <div>
-                                <strong className="block text-sm font-bold text-ink tracking-tight">{opt.title}</strong>
-                                <span className="block text-[0.7rem] text-gray leading-tight mt-0.5">{opt.sub}</span>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
+                    <div className="space-y-8">
+                      <div>
+                        <h3 className="text-2xl font-black text-ink tracking-tight mb-2">
+                          {QUESTIONS[surveyStep - 1].title}
+                        </h3>
+                        <p className="text-sm text-gray-lt">
+                          {QUESTIONS[surveyStep - 1].sub}
+                        </p>
                       </div>
-                    )}
-
-                    {surveyStep === 2 && (
-                      <div className="space-y-8">
-                        <div>
-                          <h3 className="text-2xl font-black text-ink tracking-tight mb-2">How do people find you online right now?</h3>
-                          <p className="text-sm text-gray-lt">Be honest — this helps us find the best way to help you.</p>
-                        </div>
-                        <div className="space-y-3">
-                          {[
-                            { val: 'none', title: 'They don\'t', sub: 'No website, no Facebook page, nothing yet', score: 0, icon: <Ban /> },
-                            { val: 'social', title: 'Mostly Facebook or Instagram', sub: 'I have pages but no website or online store', score: 1, icon: <Smartphone /> },
-                            { val: 'website', title: 'I have a website or store', sub: 'But it doesn\'t bring in many new customers', score: 2, icon: <Globe /> },
-                            { val: 'partial', title: 'I have a system running', sub: 'But I know it could be doing much better', score: 3, icon: <Settings /> }
-                          ].map(opt => (
-                            <button
-                              key={opt.val}
-                              onClick={() => handleAnswer(2, opt.val, opt.score)}
-                              className={cn(
-                                "flex items-center gap-4 p-5 rounded-2xl border-2 w-full text-left transition-all group",
-                                answers[2]?.val === opt.val ? "bg-green/10 border-green" : "bg-cream border-cream3 hover:border-green/30 hover:bg-green/5"
-                              )}
-                            >
-                              <div className={cn(
-                                "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
-                                answers[2]?.val === opt.val ? "bg-green text-ink" : "bg-white border border-bdr-d text-ink group-hover:scale-110"
-                              )}>
-                                {opt.icon}
+                      <div className={cn("grid gap-3", QUESTIONS[surveyStep - 1].cols === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2")}>
+                        {QUESTIONS[surveyStep - 1].options.map(opt => (
+                          <button
+                            key={opt.val}
+                            onClick={() => handleAnswer(surveyStep, opt.val, opt.score)}
+                            className={cn(
+                              "relative flex items-center gap-4 p-5 rounded-2xl border-2 w-full text-left transition-all duration-300 ease-out group overflow-hidden",
+                              answers[surveyStep]?.val === opt.val 
+                                ? "bg-green/10 border-green shadow-[0_4px_20px_-4px_rgba(200,240,96,0.3)]" 
+                                : "bg-cream border-cream3 hover:border-green/50 hover:bg-white hover:shadow-lg hover:shadow-ink/5 hover:-translate-y-[2px]"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ease-out",
+                              answers[surveyStep]?.val === opt.val 
+                                ? "bg-green text-ink scale-110 shadow-sm" 
+                                : "bg-white border border-bdr-d text-ink group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-green/10 group-hover:border-green/50 group-hover:text-green-dk"
+                            )}>
+                              <div className="scale-90 transition-transform duration-300 group-hover:scale-100 relative">
+                                {opt.icon && React.cloneElement(opt.icon as any, { strokeWidth: answers[surveyStep]?.val === opt.val ? 2.5 : 1.5 })}
                               </div>
-                              <div>
-                                <strong className="block text-sm font-bold text-ink tracking-tight">{opt.title}</strong>
-                                <span className="block text-[0.7rem] text-gray leading-tight mt-0.5">{opt.sub}</span>
+                            </div>
+                            <div className="flex-1">
+                              <strong className="block text-sm font-bold text-ink tracking-tight">{opt.title}</strong>
+                              <span className="block text-[0.7rem] text-gray leading-tight mt-0.5 pr-6">{opt.sub}</span>
+                            </div>
+                            {/* Checkmark indicator for selected state */}
+                            {answers[surveyStep]?.val === opt.val && (
+                              <div className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 bg-green rounded-full flex items-center justify-center text-ink shadow-sm animate-in zoom-in duration-200">
+                                <Check size={14} strokeWidth={3} />
                               </div>
-                            </button>
-                          ))}
-                        </div>
+                            )}
+                          </button>
+                        ))}
                       </div>
-                    )}
-
-                    {surveyStep > 2 && (
-                      <div className="space-y-8">
-                        <div>
-                          <h3 className="text-2xl font-black text-ink tracking-tight mb-2">
-                            {surveyStep === 3 ? "If you could wave a magic wand and fix one part of your sales process, what would it be?" :
-                             surveyStep === 4 ? "How much money does the business make monthly?" :
-                             surveyStep === 5 ? "What is the biggest opportunity you're currently missing out on?" :
-                             "How would you like to start?"}
-                          </h3>
-                          <p className="text-sm text-gray-lt">
-                            {surveyStep === 3 ? "Pick the one that costs you the most money or time." :
-                             surveyStep === 4 ? "This helps us recommend the right growth plan for you." :
-                             surveyStep === 5 ? "Select the one thing you need most." :
-                             "There's no wrong answer — we'll make it work for you."}
-                          </p>
-                        </div>
-                        <div className={cn("grid gap-3", surveyStep === 4 || surveyStep === 6 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2")}>
-                          {(
-                            surveyStep === 3 ? [
-                              { val: 'leads', title: 'Getting more qualified leads', sub: 'I need a steady stream of new customers', score: 2, icon: <TrendingDown /> },
-                              { val: 'convert', title: 'Converting more leads into sales', sub: 'I have enquiries but they don\'t buy', score: 2, icon: <Banknote /> },
-                              { val: 'repeat', title: 'Getting customers to buy again', sub: 'I need to turn one-time buyers into loyal fans', score: 2, icon: <Repeat /> },
-                              { val: 'time', title: 'Saving time on admin and follow-ups', sub: 'I\'m too busy running the business to market it', score: 2, icon: <Timer /> }
-                            ] : surveyStep === 4 ? [
-                              { val: '0-10k', title: 'R0 – R10,000 per month', sub: 'Pre-revenue or just getting started', score: 0, icon: <Leaf /> },
-                              { val: '10-50k', title: 'R10,000 – R50,000 per month', sub: 'Early traction, ready to scale', score: 1, icon: <TrendingUp /> },
-                              { val: '50-150k', title: 'R50,000 – R150,000 per month', sub: 'Growing fast, need systems to keep up', score: 2, icon: <Rocket /> },
-                              { val: '150k+', title: 'R150,000+ per month', sub: 'Established — want to optimise and dominate', score: 3, icon: <Diamond /> }
-                            ] : surveyStep === 5 ? [
-                              { val: 'store', title: 'An online store that sells 24/7', sub: 'Professional site + payment gateway', score: 1, icon: <ShoppingCart /> },
-                              { val: 'pipeline', title: 'Automated WhatsApp & CRM pipeline', sub: 'Sales follow-up running 24/7', score: 1, icon: <MessageSquare /> },
-                              { val: 'traffic', title: 'Targeted social media & paid ads', sub: 'More visibility and high-quality leads', score: 1, icon: <Megaphone /> },
-                              { val: 'all', title: 'A full end-to-end digital growth engine', sub: 'Everything integrated for maximum results', score: 2, icon: <Trophy /> }
-                            ] : [
-                              { val: 'pilot', title: 'Free pilot — R0 upfront', sub: 'I activate the software tools. We see results first, then decide.', score: 2, icon: <HelpCircle /> },
-                              { val: 'paid', title: 'Paid setup — fastest delivery', sub: 'I pay the once-off setup fee and we start immediately with priority build and 7-day delivery.', score: 3, icon: <Rocket /> },
-                              { val: 'unsure', title: 'Not sure yet — I want advice first', sub: 'Show me the numbers and the plan on the call, then I\'ll decide with confidence.', score: 1, icon: <MessageSquare /> }
-                            ]
-                          ).map(opt => (
-                            <button
-                              key={opt.val}
-                              onClick={() => handleAnswer(surveyStep, opt.val, opt.score)}
-                              className={cn(
-                                "flex items-center gap-4 p-5 rounded-2xl border-2 w-full text-left transition-all group",
-                                answers[surveyStep]?.val === opt.val ? "bg-green/10 border-green" : "bg-cream border-cream3 hover:border-green/30 hover:bg-green/5"
-                              )}
-                            >
-                              <div className={cn(
-                                "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
-                                answers[surveyStep]?.val === opt.val ? "bg-green text-ink" : "bg-white border border-bdr-d text-ink group-hover:scale-110"
-                              )}>
-                                {opt.icon}
-                              </div>
-                              <div>
-                                <strong className="block text-sm font-bold text-ink tracking-tight">{opt.title}</strong>
-                                <span className="block text-[0.7rem] text-gray leading-tight mt-0.5">{opt.sub}</span>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    </div>
 
                     <div className="mt-12 pt-8 border-t border-bdr flex justify-between items-center">
                       <button 
                         onClick={prevStep}
                         disabled={surveyStep === 1}
-                        className="text-sm font-bold text-gray hover:text-ink disabled:opacity-0 transition-all"
+                        className="text-sm font-bold text-gray hover:text-ink disabled:opacity-0 transition-colors duration-200"
                       >
                         Back
                       </button>
                       <button 
                         onClick={nextStep}
                         disabled={!answers[surveyStep]}
-                        className="bg-ink text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-green disabled:opacity-30 disabled:hover:bg-ink transition-all"
+                        className="bg-ink text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-green disabled:opacity-30 disabled:hover:bg-ink transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
                       >
-                        {surveyStep === 6 ? "See my results" : "Continue"}
+                        {surveyStep === 15 ? "See my results" : "Continue"}
                         <ArrowRight size={16} />
                       </button>
                     </div>
                   </div>
                 </motion.div>
-              ) : surveyStep === 7 && !isSubmitted ? (
+              ) : surveyStep === 16 && !isSubmitted ? (
                 <motion.div
                   key="squeeze"
                   initial={{ opacity: 0, y: 20 }}
@@ -961,7 +1139,7 @@ export default function App() {
                 >
                   <div className="w-24 h-24 rounded-full border-2 border-green flex flex-col items-center justify-center mx-auto mb-6">
                     <span className="text-4xl font-black text-ink bg-green px-2 py-1 tracking-tighter leading-none">{totalScore}</span>
-                    <span className="text-[0.5rem] font-bold text-gray-lt uppercase tracking-widest mt-1">/ 16</span>
+                    <span className="text-[0.5rem] font-bold text-gray-lt uppercase tracking-widest mt-1">/ 45</span>
                   </div>
                   <div className="inline-block bg-green border border-ink/20 rounded-full px-5 py-1.5 mb-6 text-[0.75rem] font-bold text-ink uppercase tracking-wider">
                     {getPhaseInfo().phase}
@@ -976,28 +1154,46 @@ export default function App() {
                     <span>Your report includes a 14-day growth roadmap and a free pilot offer.</span>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <input required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green transition-all" placeholder="Your full name" />
-                      <input required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green transition-all" placeholder="Business name" />
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="text-left space-y-1.5">
+                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Full Name <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.fullName} onChange={(e) => setSurveyForm(prev => ({...prev, fullName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="e.g. Jane Doe" />
+                      </div>
+                      <div className="text-left space-y-1.5">
+                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Business Name <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.businessName} onChange={(e) => setSurveyForm(prev => ({...prev, businessName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="Your Company Ltd" />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <input required type="tel" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green transition-all" placeholder="WhatsApp number" />
-                      <input required type="email" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green transition-all" placeholder="Email address" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="text-left space-y-1.5">
+                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">WhatsApp Number <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.phone} onChange={(e) => setSurveyForm(prev => ({...prev, phone: e.target.value}))} required type="tel" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="+27 XX XXX XXXX" />
+                      </div>
+                      <div className="text-left space-y-1.5">
+                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Email <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.email} onChange={(e) => setSurveyForm(prev => ({...prev, email: e.target.value}))} required type="email" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="jane@example.com" />
+                      </div>
                     </div>
-                    <input className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green transition-all" placeholder="Website / Social URL (optional)" />
-                    <select required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green transition-all appearance-none">
-                      <option value="">Which package interests you most?</option>
-                      <option>Entry — R3,500/mo</option>
-                      <option>Growth — R5,500/mo</option>
-                      <option>Enterprise — Custom</option>
-                      <option>Free pilot first, then decide</option>
-                    </select>
+                    <div className="text-left space-y-1.5">
+                      <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Website or Social Profile</label>
+                      <input value={surveyForm.website} onChange={(e) => setSurveyForm(prev => ({...prev, website: e.target.value}))} className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="https://..." />
+                    </div>
+                    <div className="text-left space-y-1.5">
+                      <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Interested Package <span className="text-red-500">*</span></label>
+                      <select value={surveyForm.interest} onChange={(e) => setSurveyForm(prev => ({...prev, interest: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300 appearance-none cursor-pointer">
+                        <option value="">Select an option...</option>
+                        <option value="Entry">Entry — R3,500/mo</option>
+                        <option value="Growth">Growth — R5,500/mo</option>
+                        <option value="Enterprise">Enterprise — Custom</option>
+                        <option value="Pilot">Free pilot first, then decide</option>
+                      </select>
+                    </div>
                     
                     <button 
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-ink text-white py-5 rounded-xl font-black text-lg flex items-center justify-center gap-3 hover:bg-green hover:-translate-y-1 transition-all shadow-2xl shadow-ink/10 disabled:opacity-50"
+                      className="w-full bg-ink text-white py-5 rounded-xl font-black text-lg flex items-center justify-center gap-3 hover:bg-green hover:text-ink hover:-translate-y-1 transition-all duration-300 ease-out shadow-lg hover:shadow-2xl hover:shadow-green/30 disabled:opacity-50 active:scale-95"
                     >
                       {isSubmitting ? <Loader2 className="animate-spin" /> : <ClipboardCheck size={20} />}
                       Send Me My Free Audit Report

@@ -1,0 +1,47 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile data",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "businessName": { "type": "string" },
+        "website": { "type": "string" },
+        "industry": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["fullName", "email"]
+    },
+    "Survey": {
+      "title": "Survey Result",
+      "description": "Survey result data",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "fullName": { "type": "string" },
+        "businessName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "website": { "type": "string" },
+        "interest": { "type": "string" },
+        "score": { "type": "number" },
+        "answers": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["fullName", "email"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/surveys/{surveyId}": {
+      "schema": { "$ref": "#/entities/Survey" },
+      "description": "Survey results"
+    }
+  }
+}

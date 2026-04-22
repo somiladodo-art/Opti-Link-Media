@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Mail, Lock, Loader2, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { signInWithGoogle } from '../lib/firebase';
 
 export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack: () => void }) {
-  const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await signInWithGoogle();
       onLogin();
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,44 +63,20 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
           >
             <div className="mb-10">
               <h2 className="text-3xl font-black text-ink tracking-tight mb-2">
-                {isLogin ? 'Welcome back' : 'Create your account'}
+                Client Portal Access
               </h2>
               <p className="text-gray text-sm">
-                {isLogin ? 'Enter your details to access your dashboard.' : 'Set up your client portal to track your growth.'}
+                Sign in with Google to access your dashboard.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5 text-left">
-              {!isLogin && (
-                <div>
-                  <label className="block font-mono text-[10px] font-bold text-ink uppercase tracking-wider mb-2">Full Name</label>
-                  <input required type="text" className="w-full p-4 bg-white border-2 border-bdr rounded-lg text-sm outline-none focus:border-green transition-all" placeholder="John Doe" />
-                </div>
-              )}
-              <div>
-                <label className="block font-mono text-[10px] font-bold text-ink uppercase tracking-wider mb-2">Email Address</label>
-                <div className="relative">
-                  <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-lt" />
-                  <input required type="email" className="w-full p-4 pl-12 bg-white border-2 border-bdr rounded-lg text-sm outline-none focus:border-green transition-all" placeholder="name@company.com" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="block font-mono text-[10px] font-bold text-ink uppercase tracking-wider">Password</label>
-                  {isLogin && <a href="#" className="text-xs font-bold text-green hover:underline">Forgot?</a>}
-                </div>
-                <div className="relative">
-                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-lt" />
-                  <input required type="password" className="w-full p-4 pl-12 bg-white border-2 border-bdr rounded-lg text-sm outline-none focus:border-green transition-all" placeholder="••••••••" />
-                </div>
-              </div>
-
               <button 
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-ink text-white py-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-green disabled:opacity-70 transition-all mt-4 shadow-xl shadow-ink/10"
+                className="w-full bg-ink text-white py-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-green hover:text-ink disabled:opacity-70 transition-all shadow-xl shadow-ink/10"
               >
-                {isLoading ? <Loader2 size={18} className="animate-spin" /> : (isLogin ? 'Sign In' : 'Create Account')}
+                {isLoading ? <Loader2 size={18} className="animate-spin" /> : 'Continue with Google'}
                 {!isLoading && <ArrowRight size={18} />}
               </button>
               
@@ -106,15 +85,6 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
                 <span>End-to-End Encrypted • SOC 2 Type II Compliant</span>
               </div>
             </form>
-
-            <div className="mt-8 text-center">
-              <p className="text-sm text-gray">
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
-                <button onClick={() => setIsLogin(!isLogin)} className="font-bold text-ink hover:text-green-mid transition-colors">
-                  {isLogin ? 'Create one' : 'Sign in'}
-                </button>
-              </p>
-            </div>
           </motion.div>
         </div>
       </div>

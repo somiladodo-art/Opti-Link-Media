@@ -87,19 +87,41 @@ const ShareButtons = ({ title }: { title: string }) => {
 export default function Blog({ onBack }: { onBack: () => void }) {
   // SEO Optimization
   useEffect(() => {
+    const defaultTitle = "Opti-Link Media | Strategic Operations Partner";
     document.title = "Blog & Insights | Opti-Link Media Group";
     
-    // Update meta description for SEO
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', 'Read the latest insights on digital growth, automation, and scaling your business from the experts at Opti-Link Media Group.');
+    // Helper to set or update meta tags
+    const setMetaTag = (selector: string, attr: string, attrValue: string, content: string) => {
+      let element = document.querySelector(`meta[${selector}="${attrValue}"]`);
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attr, attrValue);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+      return element;
+    };
+
+    // Update primary SEO metadata
+    const desc = 'Read the latest insights on digital growth, automation, and scaling your business from the experts at Opti-Link Media Group.';
+    const title = 'Blog & Insights | Opti-Link Media Group';
+
+    const tags = [
+      setMetaTag('name', 'name', 'description', desc),
+      setMetaTag('property', 'property', 'og:title', title),
+      setMetaTag('property', 'property', 'og:description', desc),
+      setMetaTag('name', 'name', 'twitter:title', title),
+      setMetaTag('name', 'name', 'twitter:description', desc)
+    ];
     
     return () => {
-      document.title = "Opti-Link Media Group";
+      document.title = defaultTitle;
+      // Reset main description to default
+      setMetaTag('name', 'name', 'description', "South Africa's premier digital growth partner. We build, automate, and operate your online business so you can focus on what matters.");
+      setMetaTag('property', 'property', 'og:title', 'Opti-Link Media | Digital Growth Partner');
+      setMetaTag('property', 'property', 'og:description', "We build, automate, and operate your online business to drive massive revenue growth.");
+      setMetaTag('name', 'name', 'twitter:title', 'Opti-Link Media | Digital Growth Partner');
+      setMetaTag('name', 'name', 'twitter:description', "We build, automate, and operate your online business to drive massive revenue growth.");
     };
   }, []);
 

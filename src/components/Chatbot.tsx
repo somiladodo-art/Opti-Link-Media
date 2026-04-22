@@ -29,6 +29,7 @@ export default function Chatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const chatSessionRef = useRef<any>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -45,21 +46,17 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
-      const chat = ai.chats.create({
-        model: 'gemini-3-flash-preview',
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-        },
-      });
-
-      // Reconstruct history for the chat
-      // Note: sendMessage only takes the current message, but we can pass history if needed.
-      // For simplicity with the SDK, we'll just send the message.
-      // The SDK's chat object handles history if we keep the instance, 
-      // but here we recreate it for statelessness or we could persist the chat instance.
+      if (!chatSessionRef.current) {
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+        chatSessionRef.current = ai.chats.create({
+          model: 'gemini-3-flash-preview',
+          config: {
+            systemInstruction: SYSTEM_INSTRUCTION,
+          },
+        });
+      }
       
-      const response = await chat.sendMessage({ message: userMessage });
+      const response = await chatSessionRef.current.sendMessage({ message: userMessage });
       const text = response.text || "I'm sorry, I couldn't process that.";
       
       setMessages(prev => [...prev, { role: 'model', text }]);
