@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowRight, 
   Check, 
@@ -189,9 +189,9 @@ const RevenueCalculator = () => {
           
           <div className="space-y-6">
             <div>
-              <div className="flex justify-between mb-2 items-center">
+              <div className="flex justify-between mb-2">
                 <label className="text-xs font-bold text-ink uppercase tracking-wider">Monthly Visitors / Leads</label>
-                <span className="text-xs font-bold bg-green text-ink px-2 py-0.5 rounded-md">{visitors.toLocaleString()}</span>
+                <span className="text-sm font-bold text-green">{visitors.toLocaleString()}</span>
               </div>
               <input 
                 type="range" min="100" max="10000" step="100" 
@@ -201,9 +201,9 @@ const RevenueCalculator = () => {
             </div>
             
             <div>
-              <div className="flex justify-between mb-2 items-center">
+              <div className="flex justify-between mb-2">
                 <label className="text-xs font-bold text-ink uppercase tracking-wider">Current Conversion Rate</label>
-                <span className="text-xs font-bold bg-green text-ink px-2 py-0.5 rounded-md">{conversion}%</span>
+                <span className="text-sm font-bold text-green">{conversion}%</span>
               </div>
               <input 
                 type="range" min="0.1" max="5" step="0.1" 
@@ -213,9 +213,9 @@ const RevenueCalculator = () => {
             </div>
 
             <div>
-              <div className="flex justify-between mb-2 items-center">
+              <div className="flex justify-between mb-2">
                 <label className="text-xs font-bold text-ink uppercase tracking-wider">Average Order Value (R)</label>
-                <span className="text-xs font-bold bg-green text-ink px-2 py-0.5 rounded-md">R {aov.toLocaleString()}</span>
+                <span className="text-sm font-bold text-green">R {aov.toLocaleString()}</span>
               </div>
               <input 
                 type="range" min="100" max="5000" step="50" 
@@ -451,7 +451,6 @@ export default function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -530,12 +529,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-cream selection:bg-green selection:text-ink">
-      {/* Scroll Progress Bar */}
-      <motion.div 
-        className="fixed top-0 left-0 right-0 h-1.5 bg-green transform origin-left z-[300]"
-        style={{ scaleX: scrollYProgress }}
-      />
-      
       {/* Navigation */}
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6",
@@ -616,9 +609,9 @@ export default function App() {
                   document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="group bg-ink text-white text-sm md:text-base font-bold px-5 py-3 md:px-7 md:py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10 whitespace-nowrap flex items-center justify-center gap-2"
+              className="bg-ink text-white text-sm md:text-base font-bold px-5 py-3 md:px-7 md:py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10 whitespace-nowrap"
             >
-              Get started <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              Get started
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -649,7 +642,7 @@ export default function App() {
                     {cat.isAuth ? (
                       <button 
                         onClick={cat.action}
-                        className="text-lg font-black text-ink uppercase tracking-tight hover:text-green-dk"
+                        className="text-lg font-black text-ink uppercase tracking-tight hover:text-green-800"
                       >
                         {cat.label}
                       </button>
@@ -679,58 +672,48 @@ export default function App() {
         <>
           {/* Hero Section */}
           <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 min-h-[90vh] flex items-center overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,240,96,0.1)_0%,transparent_50%)] pointer-events-none animate-pulse duration-[10s]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(200,240,96,0.05)_0%,transparent_40%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,240,96,0.1)_0%,transparent_50%)] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10 w-full">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30, filter: 'blur(5px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
             className="flex flex-col items-center w-full"
           >
-            <div className="mb-6">
-              <span className="bg-red-50 text-red-600 border border-red-200 text-xs font-black px-4 py-1.5 uppercase tracking-widest rounded-full shadow-sm animate-pulse flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-600"></span> Limited: Only 5 Pilot Slots Per Month
-              </span>
+            <div className="mb-8">
+              <SphereLogo3D className="w-32 h-32 md:w-40 md:h-40" />
             </div>
             
-            <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-black text-ink tracking-tighter leading-[1] uppercase mb-6 max-w-6xl mx-auto">
-              TURN YOUR BUSINESS INTO A <br className="hidden md:block" />
-              <span className="bg-green text-ink px-4 py-1.5 md:px-6 md:py-2 mt-2 md:mt-4 inline-block transform md:-rotate-1 whitespace-nowrap shadow-sm">REVENUE-GENERATING DIGITAL MACHINE</span>
+            <h1 className="text-6xl md:text-8xl lg:text-[120px] font-black text-ink tracking-tighter leading-[0.9] uppercase mb-4">
+              DIGITAL<br />
+              <span className="bg-green text-ink px-6 py-2 mt-2 inline-block">MARKETING</span>
             </h1>
 
-            <p className="text-lg md:text-2xl text-gray font-medium tracking-tight mb-10 max-w-3xl leading-relaxed">
-              We build, automate, and run your entire digital marketing system — so you get more leads, more sales, and consistent growth with <strong className="text-ink">zero upfront cost</strong>.
+            <p className="text-xl md:text-2xl text-gray font-medium tracking-tight mb-12 max-w-3xl">
+              Thank you for joining this digital marketing workshop where we explore effective strategies and tools innovate collaborate optimize learn.
             </p>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16 w-full max-w-2xl items-center">
+            <div className="flex flex-wrap justify-center gap-4 mb-16 w-full max-w-4xl justify-between items-center">
+              <div className="bg-green text-ink font-bold px-6 py-3 text-lg rounded-xl shadow-sm">
+                Presented by Opti-Link
+              </div>
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto group bg-ink text-white px-8 py-5 font-black text-lg md:text-xl rounded-xl hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 shadow-2xl shadow-ink/20 active:scale-95 flex items-center justify-center gap-3"
+                className="bg-ink text-white px-8 py-3.5 font-bold text-lg rounded-xl hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-green/20 active:scale-95"
               >
-                Start Free Pilot <ArrowRight size={22} className="group-hover:translate-x-1.5 transition-transform" />
+                Getting Started
               </button>
-              <button 
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto bg-white border-2 border-bdr text-ink px-8 py-5 font-black text-lg md:text-xl rounded-xl hover:border-ink hover:bg-cream transition-all duration-300 ease-out flex items-center justify-center gap-2"
-              >
-                View Features
-              </button>
-            </div>
-
-            <div className="flex items-center gap-4 text-xs font-bold text-gray-lt uppercase tracking-widest">
-              <ShieldCheck size={16} className="text-green" /> End-To-End Done For You
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Trusted By Section */}
-      <div className="border-y border-bdr bg-gradient-to-b from-white/80 to-white/30 py-12 relative overflow-hidden backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center">
-          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-10">Trusted by scaling businesses across 14+ countries</p>
-          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+      <div className="border-y border-bdr bg-white/50 py-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <p className="text-center font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-8">Trusted by enterprise scaling teams across 14 countries</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-40 grayscale">
             <div className="font-black text-2xl tracking-tighter">NEXUS<span className="font-light">GLOBAL</span></div>
             <div className="font-black text-2xl tracking-widest">AURA</div>
             <div className="font-black text-2xl tracking-tighter">VERTEX<span className="text-green">.</span></div>
@@ -747,8 +730,7 @@ export default function App() {
             <Logo className="w-36 h-36 mb-8" />
             <div className="font-mono text-[10px] font-bold text-gray uppercase tracking-[0.3em] mb-3">[About us]</div>
             <p className="text-xl text-ink leading-relaxed max-w-xs font-medium">
-              We are a global digital marketing and automation agency.<br/><br/>
-              We don't just build websites — we build <strong className="bg-green text-ink px-1">complete revenue systems</strong>. From Shopify stores to CRM automation and lead generation funnels, we design, launch, and manage everything your business needs to grow online.
+              We are a premier global digitisation and growth partner. We don't sell software — we <strong className="bg-green text-ink px-1">operate your entire digital engine</strong> so you can focus on what you do best.
             </p>
           </div>
           
@@ -801,8 +783,8 @@ export default function App() {
           <div>
             <Eyebrow>What we do</Eyebrow>
             <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
-              DIGITAL MARKETING &<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">AUTOMATION SERVICES</span>
+              EVERYTHING YOUR<br />
+              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUSINESS NEEDS</span>
             </h2>
           </div>
           <div>
@@ -810,14 +792,11 @@ export default function App() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8">
           {[
-            { icon: <Target />, title: 'Digital Marketing Audit', desc: 'A deep-dive business audit to diagnose bottlenecks and map a clear growth strategy.', tags: ['Strategy', 'SEO'] },
-            { icon: <PenTool />, title: 'Conversion Funnel Strategy', desc: 'High-converting landing pages and customer journeys that turn browsers into buyers.', tags: ['CRO', 'Funnels'] },
-            { icon: <ShoppingCart />, title: 'Shopify Store Setup', desc: 'End-to-end ecommerce setup, from theme design to inventory sync and fast checkouts.', tags: ['Ecommerce', 'Shopify'] },
-            { icon: <MessageSquare />, title: 'CRM & WhatsApp Automation', desc: 'Automate follow-ups, abandoned cart recovery, and lead nurturing effortlessly.', tags: ['CRM', 'Automation'] },
-            { icon: <TrendingUp />, title: 'Paid Ads Management', desc: 'Scalable ad campaigns across Meta and Google that deliver targeted traffic.', tags: ['Meta Ads', 'Google Ads'] },
-            { icon: <Check />, title: 'Lead Generation Systems', desc: 'Predictable inbound systems designed strictly for acquiring qualified business leads.', tags: ['Leads', 'Growth'] }
+            { icon: <HelpCircle />, title: 'Free Consultation (Pilot)', desc: 'A 45–60 minute business audit to diagnose pain points and create a customised growth roadmap.', tags: ['Audit', 'Roadmap'] },
+            { icon: <ShoppingCart />, title: 'Implementation Package', desc: 'Full setup of your online store, hosting, domain, CRM, and automation tools.', tags: ['Shopify', 'CRM', 'Automation'] },
+            { icon: <TrendingUp />, title: 'Monthly Retainer', desc: 'Ongoing marketing operations, ad management, content creation, and automation upgrades.', tags: ['Ads', 'Content', 'Growth'] }
           ].map((svc, i) => (
             <div key={i} className="bg-white p-10 rounded-[2rem] border border-bdr-d shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-500 ease-out group">
               <div className="w-16 h-16 rounded-2xl bg-green border border-ink/10 flex items-center justify-center text-ink mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-sm">
@@ -827,7 +806,7 @@ export default function App() {
               <p className="text-sm text-gray leading-relaxed mb-8">{svc.desc}</p>
               <div className="flex flex-wrap gap-2">
                 {svc.tags.map(tag => (
-                  <span key={tag} className="font-mono text-[10px] font-bold bg-cream border border-bdr-d rounded-md px-3 py-1.5 text-gray uppercase tracking-wider group-hover:bg-green/10 group-hover:border-green/30 group-hover:text-green-dk transition-colors duration-300">
+                  <span key={tag} className="font-mono text-[10px] font-bold bg-cream border border-bdr-d rounded-md px-3 py-1.5 text-gray uppercase tracking-wider group-hover:bg-green/10 group-hover:border-green/30 group-hover:text-green-800 transition-colors duration-300">
                     {tag}
                   </span>
                 ))}
@@ -839,53 +818,52 @@ export default function App() {
 
       {/* Process Section */}
       <Section id="features">
-        <Eyebrow centered>The Process</Eyebrow>
-        <h2 className="text-4xl md:text-6xl font-black text-ink tracking-tighter leading-none uppercase mb-6 text-center">
-          OUR DIGITAL MARKETING<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block shadow-sm transform -rotate-1">AUTOMATION PROCESS</span>
+        <Eyebrow centered>The process</Eyebrow>
+        <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
+          LIVE AND SELLING<br />
+          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">IN 14 DAYS</span>
         </h2>
-        <Subheading centered className="mb-24 text-xl">A simple 5-step plan that takes your business from "just a shop" to a digital machine — delivered done-for-you, completely hands-off.</Subheading>
+        <Subheading centered className="mb-20">A simple 5-step plan that takes your business from "just a shop" to a digital machine — starting from wherever you are today.</Subheading>
         
-        <div className="relative max-w-6xl mx-auto">
-          <div className="absolute top-10 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-bdr-d to-transparent hidden md:block" />
-          <div className="grid md:grid-cols-5 gap-6 md:gap-4">
+        <div className="relative max-w-5xl mx-auto">
+          <div className="absolute top-1/2 left-0 w-full h-0.5 bg-bdr-d hidden md:block -translate-y-1/2" />
+          <div className="grid md:grid-cols-5 gap-8">
             {[
               { phase: '01', title: 'Audit & Strategy', desc: 'Deep dive into your current metrics and bottlenecks.', icon: <Target /> },
-              { phase: '02', title: 'Infra Build', desc: 'Setting up CRM, tracking, and automation tools.', icon: <Settings /> },
+              { phase: '02', title: 'Infrastructure Build', desc: 'Setting up CRM, tracking, and automation tools.', icon: <Settings /> },
               { phase: '03', title: 'Asset Creation', desc: 'Landing pages, ad creatives, and email sequences.', icon: <PenTool /> },
-              { phase: '04', title: 'Traffic Gen', desc: 'Launching targeted ad campaigns and SEO.', icon: <Rocket /> },
-              { phase: '05', title: 'Optimisation', desc: 'Weekly reporting & KPI measurement.', icon: <Trophy /> }
+              { phase: '04', title: 'Traffic Generation', desc: 'Launching targeted ad campaigns and SEO.', icon: <Rocket /> },
+              { phase: '05', title: 'Launch & Optimisation', desc: 'Weekly reporting, KPI measurement, and retainer proposals.', icon: <Trophy /> }
             ].map((step, i) => (
-              <div key={i} className="relative z-10 text-center group bg-white md:bg-transparent p-6 md:p-0 rounded-2xl md:rounded-none border md:border-0 border-bdr shadow-sm md:shadow-none hover:-translate-y-2 md:hover:-translate-y-0 transition-all duration-300">
-                <div className="w-20 h-20 rounded-2xl bg-cream border border-bdr flex items-center justify-center mx-auto mb-6 text-ink shadow-sm group-hover:bg-green group-hover:border-green group-hover:scale-110 transition-all duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(200,240,96,0.6)]">
-                  <span className="font-black text-3xl text-gray-lt group-hover:hidden transition-all">{step.phase}</span>
-                  <span className="hidden group-hover:block transition-all duration-300 text-ink">
-                    {React.cloneElement(step.icon as any, { size: 32, strokeWidth: 2.5 })}
+              <div key={i} className="relative z-10 text-center group">
+                <div className="w-16 h-16 rounded-2xl bg-green flex items-center justify-center mx-auto mb-6 text-ink shadow-sm group-hover:scale-110 transition-transform duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(200,240,96,0.6)]">
+                  <span className="font-black text-2xl group-hover:hidden">{step.phase}</span>
+                  <span className="hidden group-hover:block transition-all duration-300">
+                    {React.cloneElement(step.icon as any, { strokeWidth: 2 })}
                   </span>
                 </div>
-                <h4 className="text-base font-black text-ink mb-3 tracking-tight group-hover:text-green-dk transition-colors duration-300">{step.title}</h4>
-                <p className="text-sm text-gray leading-relaxed group-hover:text-ink transition-colors duration-300 font-medium">{step.desc}</p>
+                <h4 className="text-sm font-bold text-ink mb-2 tracking-tight group-hover:text-green-800 transition-colors duration-300">{step.title}</h4>
+                <p className="text-xs text-gray leading-relaxed group-hover:text-ink transition-colors duration-300">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-24 bg-white border border-bdr rounded-3xl p-10 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden shadow-2xl shadow-ink/5 group">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-green/5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <div className="relative z-10">
-            <h3 className="text-3xl md:text-5xl font-black text-ink tracking-tight mb-6 leading-tight">
+        <div className="mt-20 bg-cream2 border border-bdr p-12 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden">
+          <div>
+            <h3 className="text-3xl md:text-4xl font-black text-ink tracking-tight mb-4 leading-tight">
               The free pilot model —<br />how it actually works.
             </h3>
-            <p className="text-gray text-lg md:text-xl leading-relaxed max-w-3xl font-medium">
-              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="bg-green text-ink px-2 py-0.5 rounded shadow-sm">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 14 days, guaranteed, with zero operational risk.
+            <p className="text-gray text-lg leading-relaxed max-w-2xl">
+              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="bg-green text-ink px-1">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 7 days, guaranteed, with zero risk.
             </p>
           </div>
           <button 
             onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-            className="relative z-10 bg-ink text-white px-10 py-6 rounded-2xl font-black text-xl hover:bg-green hover:text-ink transition-all duration-300 whitespace-nowrap shadow-xl hover:shadow-green/20 hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 w-full lg:w-auto"
+            className="bg-green text-ink px-10 py-5 font-black text-lg hover:bg-green-h transition-all whitespace-nowrap"
           >
-            Start Your Free Pilot
-            <ArrowRight size={22} className="inline" />
+            Start free pilot
+            <ArrowRight size={20} className="inline ml-3" />
           </button>
         </div>
 
@@ -896,7 +874,7 @@ export default function App() {
       <Section id="pricing" alt>
         <Eyebrow centered>Pricing</Eyebrow>
         <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
-          AGENCY<br />
+          SIMPLE, HONEST<br />
           <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">PRICING</span>
         </h2>
         <Subheading centered className="mb-16">Monthly retainers, 3-month minimum. Paid setup or free pilot — no hidden fees, no surprises.</Subheading>
@@ -955,12 +933,12 @@ export default function App() {
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
                 className={cn(
-                "w-full py-4 font-black text-sm transition-all duration-300 hover:shadow-lg rounded-xl flex items-center justify-center gap-2 group/btn",
+                "w-full py-4 font-bold text-sm transition-all duration-300 hover:shadow-lg rounded-xl active:scale-95",
                 plan.popular 
                   ? "bg-green text-ink hover:bg-green-h hover:shadow-green/20" 
                   : "bg-cream border-2 border-bdr text-ink hover:bg-ink hover:text-white hover:border-ink"
               )}>
-                {plan.popular ? 'Start Free Pilot' : 'Get Started'} <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                Get started
               </button>
             </div>
           ))}
@@ -971,8 +949,8 @@ export default function App() {
       <Section id="results">
         <Eyebrow centered>Client results</Eyebrow>
         <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
-          SMALL BUSINESS<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">MARKETING SUCCESS</span>
+          SMMES GROWING<br />
+          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">WITH OPTI-LINK</span>
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
           {[
@@ -1002,38 +980,37 @@ export default function App() {
       {/* Why Us Section */}
       <Section id="why-us" className="bg-white">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          <div className="relative group">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-green/20 rounded-full blur-3xl group-hover:bg-green/40 transition-all duration-1000" />
+          <div className="relative">
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-green/20 rounded-full blur-3xl" />
             <img 
               src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=1000" 
-              alt="Team collaboration in our digital marketing agency" 
-              className="rounded-[2.5rem] shadow-2xl relative z-10 border border-bdr transform group-hover:scale-[1.02] transition-all duration-700"
+              alt="Team collaboration" 
+              className="rounded-[2.5rem] shadow-2xl relative z-10 border border-bdr"
               referrerPolicy="no-referrer"
-              loading="lazy"
             />
-            <div className="absolute -bottom-6 -right-6 bg-green text-ink p-8 shadow-2xl z-20 max-w-[240px] transform group-hover:-translate-y-2 group-hover:translate-x-2 transition-all duration-500">
-              <div className="text-4xl font-black mb-2 tracking-tighter">100%</div>
+            <div className="absolute -bottom-6 -right-6 bg-green text-ink p-8 shadow-2xl z-20 max-w-[240px]">
+              <div className="text-3xl font-black mb-2">100%</div>
               <p className="text-xs font-bold uppercase tracking-widest leading-relaxed">Focus on your business growth, not just tech.</p>
             </div>
           </div>
           <div>
             <Eyebrow>Why choose us</Eyebrow>
-            <h2 className="text-4xl md:text-6xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
-              A DIGITAL MARKETING AGENCY THAT<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUILDS REVENUE SYSTEMS.</span>
+            <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
+              WE DON'T JUST BUILD WEBSITES.<br />
+              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">WE BUILD BUSINESSES.</span>
             </h2>
             <div className="space-y-8 mt-10">
               {[
-                { title: 'We Speak Your Language', desc: 'No technical jargon. We talk about customers, sales, and profit — the things that actually matter to your business.' },
-                { title: 'Live In 14 Days', desc: 'We don\'t take months to deliver. Our systems are built to start scaling your business in two weeks or less.' },
-                { title: 'Zero Risk To Start', desc: 'With our free pilot model, you can see the system generating ROI before you commit to a long-term partnership.' }
+                { title: 'We speak your language', desc: 'No technical jargon. We talk about customers, sales, and profit — the things that actually matter to your business.' },
+                { title: 'Results in 14 days', desc: 'We don\'t take months to deliver. Our systems are built to start working for you in two weeks or less.' },
+                { title: 'Zero risk to start', desc: 'With our free pilot model, you can see the system working before you commit to a long-term partnership.' }
               ].map((item, i) => (
-                <div key={i} className="flex gap-6 group cursor-default">
-                  <div className="w-12 h-12 bg-cream border border-bdr rounded-xl text-ink flex items-center justify-center flex-shrink-0 font-black group-hover:bg-green group-hover:border-green transition-colors duration-300 shadow-sm">
+                <div key={i} className="flex gap-6">
+                  <div className="w-10 h-10 bg-green text-ink flex items-center justify-center flex-shrink-0 font-bold">
                     {i + 1}
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold text-ink mb-2 tracking-tight group-hover:text-green-dk transition-colors">{item.title}</h4>
+                    <h4 className="text-lg font-bold text-ink mb-2 tracking-tight">{item.title}</h4>
                     <p className="text-sm text-gray leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
@@ -1047,9 +1024,9 @@ export default function App() {
       <Section id="survey" className="bg-cream2">
         <div className="text-center mb-16">
           <Eyebrow centered>Free Business Audit</Eyebrow>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-ink tracking-tighter leading-[1.1] uppercase mb-6 text-center max-w-5xl mx-auto">
-            FIND OUT EXACTLY WHERE YOUR <br className="hidden lg:block" />
-            <span className="bg-green text-ink px-3 py-1 md:px-5 md:py-2 mt-2 md:mt-4 inline-block whitespace-normal md:whitespace-nowrap rounded-sm transform md:-rotate-1">BUSINESS IS LOSING MONEY</span>
+          <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
+            FIND OUT EXACTLY WHERE YOUR<br />
+            <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUSINESS IS LOSING MONEY</span>
           </h2>
           <Subheading centered>Answer 15 simple questions. We'll show you how to find more customers and grow your profit — free, with no strings attached.</Subheading>
         </div>
@@ -1105,7 +1082,7 @@ export default function App() {
                               "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ease-out",
                               answers[surveyStep]?.val === opt.val 
                                 ? "bg-green text-ink scale-110 shadow-sm" 
-                                : "bg-white border border-bdr-d text-ink group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-green/10 group-hover:border-green/50 group-hover:text-green-dk"
+                                : "bg-white border border-bdr-d text-ink group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-green/10 group-hover:border-green/50 group-hover:text-green-700"
                             )}>
                               <div className="scale-90 transition-transform duration-300 group-hover:scale-100 relative">
                                 {opt.icon && React.cloneElement(opt.icon as any, { strokeWidth: answers[surveyStep]?.val === opt.val ? 2.5 : 1.5 })}
@@ -1173,30 +1150,30 @@ export default function App() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="text-left space-y-1.5">
                         <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Full Name <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.fullName} onChange={(e) => setSurveyForm(prev => ({...prev, fullName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="e.g. Jane Doe" />
+                        <input value={surveyForm.fullName} onChange={(e) => setSurveyForm(prev => ({...prev, fullName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="e.g. Jane Doe" />
                       </div>
                       <div className="text-left space-y-1.5">
                         <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Business Name <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.businessName} onChange={(e) => setSurveyForm(prev => ({...prev, businessName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="Your Company Ltd" />
+                        <input value={surveyForm.businessName} onChange={(e) => setSurveyForm(prev => ({...prev, businessName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="Your Company Ltd" />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="text-left space-y-1.5">
                         <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">WhatsApp Number <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.phone} onChange={(e) => setSurveyForm(prev => ({...prev, phone: e.target.value}))} required type="tel" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="+27 XX XXX XXXX" />
+                        <input value={surveyForm.phone} onChange={(e) => setSurveyForm(prev => ({...prev, phone: e.target.value}))} required type="tel" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="+27 XX XXX XXXX" />
                       </div>
                       <div className="text-left space-y-1.5">
                         <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Email <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.email} onChange={(e) => setSurveyForm(prev => ({...prev, email: e.target.value}))} required type="email" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="jane@example.com" />
+                        <input value={surveyForm.email} onChange={(e) => setSurveyForm(prev => ({...prev, email: e.target.value}))} required type="email" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="jane@example.com" />
                       </div>
                     </div>
                     <div className="text-left space-y-1.5">
                       <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Website or Social Profile</label>
-                      <input value={surveyForm.website} onChange={(e) => setSurveyForm(prev => ({...prev, website: e.target.value}))} className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300" placeholder="https://..." />
+                      <input value={surveyForm.website} onChange={(e) => setSurveyForm(prev => ({...prev, website: e.target.value}))} className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="https://..." />
                     </div>
                     <div className="text-left space-y-1.5">
                       <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Interested Package <span className="text-red-500">*</span></label>
-                      <select value={surveyForm.interest} onChange={(e) => setSurveyForm(prev => ({...prev, interest: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-ink focus:bg-white focus:ring-4 focus:ring-ink/10 transition-all duration-300 appearance-none cursor-pointer">
+                      <select value={surveyForm.interest} onChange={(e) => setSurveyForm(prev => ({...prev, interest: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300 appearance-none cursor-pointer">
                         <option value="">Select an option...</option>
                         <option value="Entry">Entry — R3,500/mo</option>
                         <option value="Growth">Growth — R5,500/mo</option>
@@ -1262,9 +1239,9 @@ export default function App() {
 
                   <a 
                     href="mailto:support@optilinkgroup.com"
-                    className="group bg-ink text-white px-10 py-5 rounded-xl font-black text-lg flex items-center justify-center gap-3 hover:bg-green hover:text-ink transition-all duration-300 ease-out hover:-translate-y-1 shadow-2xl hover:shadow-green/20 max-w-sm mx-auto"
+                    className="bg-ink text-white px-10 py-4 rounded-xl font-bold text-base flex items-center gap-3 hover:bg-green transition-all mx-auto"
                   >
-                    <MessageSquare size={22} className="group-hover:scale-110 transition-transform" />
+                    <MessageSquare size={20} />
                     Email us to fast-track
                   </a>
                 </motion.div>
@@ -1292,9 +1269,9 @@ export default function App() {
             </div>
 
             {[
-              { title: 'Services', links: ['Shopify Store Setup', 'CRM & WhatsApp Automation', 'Paid Ads Management', 'Lead Generation Systems', 'Digital Marketing Audit'] },
-              { title: 'Partners & Platforms', links: ['Shopify', 'Google Ads', 'Meta Ads'] },
-              { title: 'Resources', links: ['Free Pilot', 'Case Studies', 'Trust Center', 'Privacy Policy'] }
+              { title: 'Services', links: ['Ecommerce Setup', 'WhatsApp Automation', 'CRM & Workflows', 'Social Media', 'Paid Ads'] },
+              { title: 'Global Offices', links: ['Cape Town (HQ)', 'London', 'Dubai', 'Singapore'] },
+              { title: 'Legal & Security', links: ['Trust Center', 'SOC 2 Compliance', 'GDPR Readiness', 'Privacy Policy'] }
             ].map((col, i) => (
               <div key={i}>
                 <h5 className="text-[0.65rem] font-black text-gray-lt uppercase tracking-[0.3em] mb-8">{col.title}</h5>
@@ -1302,10 +1279,8 @@ export default function App() {
                   {col.links.map(link => (
                     <li key={link}>
                       <a 
-                        href={link === 'Shopify' ? 'https://shopify.com' : link === 'Google Ads' ? 'https://ads.google.com' : link === 'Meta Ads' ? 'https://www.facebook.com/business/ads' : link.toLowerCase().replace(/\s+/g, '-')} 
+                        href={link.includes('@') ? `mailto:${link}` : "#"} 
                         className="text-sm text-gray hover:text-ink transition-colors"
-                        target={['Shopify', 'Google Ads', 'Meta Ads'].includes(link) ? '_blank' : '_self'}
-                        rel={['Shopify', 'Google Ads', 'Meta Ads'].includes(link) ? 'noopener noreferrer' : ''}
                       >
                         {link}
                       </a>
@@ -1318,11 +1293,6 @@ export default function App() {
 
           <div className="pt-8 border-t border-bdr flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-xs text-gray-lt">© 2026 Opti-Link Media Group. All rights reserved.</p>
-            <div className="flex gap-6 text-gray-lt">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">Instagram</a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">LinkedIn</a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">YouTube</a>
-            </div>
             <div className="flex gap-8 text-xs text-gray-lt">
               <a href="#" className="hover:text-ink transition-colors flex items-center gap-1"><ShieldCheck size={12} /> SOC 2 Type II Certified</a>
               <a href="#" className="hover:text-ink transition-colors">Privacy Policy</a>
