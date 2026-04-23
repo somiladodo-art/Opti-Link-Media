@@ -117,7 +117,7 @@ const Logo = ({ className, dark = false }: { className?: string, dark?: boolean 
 const Section = ({ children, className, id, dark = false, alt = false }: { children: React.ReactNode, className?: string, id?: string, dark?: boolean, alt?: boolean }) => (
   <section id={id} className={cn(
     "py-24 md:py-32 px-6",
-    dark ? "bg-ink2 text-white" : alt ? "bg-white" : "bg-cream",
+    dark ? "bg-ink2 text-white" : alt ? "bg-white" : "bg-opti-white",
     className
   )}>
     <motion.div 
@@ -137,8 +137,8 @@ const Eyebrow = ({ children, centered = false }: { children: React.ReactNode, ce
     "flex items-center gap-3 mb-4",
     centered ? "justify-center" : ""
   )}>
-    {!centered && <div className="w-5 h-[1.5px] bg-ink rounded-full" />}
-    <span className="font-mono text-[10px] font-bold text-ink bg-green px-2 py-1 uppercase tracking-[0.3em]">
+    {!centered && <div className="w-5 h-[1.5px] bg-accent rounded-full" />}
+    <span className="font-mono text-[10px] font-bold text-ink bg-accent px-2 py-1 uppercase tracking-[0.3em] shadow-sm">
       {children}
     </span>
   </div>
@@ -146,7 +146,7 @@ const Eyebrow = ({ children, centered = false }: { children: React.ReactNode, ce
 
 const Heading = ({ children, className, centered = false }: { children: React.ReactNode, className?: string, centered?: boolean }) => (
   <h2 className={cn(
-    "text-4xl md:text-5xl lg:text-6xl font-black text-ink tracking-tight leading-[1.1] mb-6",
+    "text-4xl md:text-5xl lg:text-7xl font-black text-opti-black tracking-tight leading-tight mb-8",
     centered ? "text-center" : "",
     className
   )}>
@@ -156,7 +156,7 @@ const Heading = ({ children, className, centered = false }: { children: React.Re
 
 const Subheading = ({ children, className, centered = false }: { children: React.ReactNode, className?: string, centered?: boolean }) => (
   <p className={cn(
-    "text-lg md:text-xl text-gray max-w-2xl leading-relaxed",
+    "text-lg md:text-xl text-opti-gray max-w-3xl leading-relaxed",
     centered ? "text-center mx-auto" : "",
     className
   )}>
@@ -175,23 +175,23 @@ const RevenueCalculator = () => {
   const lostRevenue = potentialRevenue - currentRevenue;
 
   return (
-    <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-bdr-d relative overflow-hidden my-20">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-green/10 rounded-full blur-[80px] opacity-50 pointer-events-none" />
+    <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-opti-black/10 relative overflow-hidden my-20">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-opti-black/5 rounded-full blur-[80px] opacity-50 pointer-events-none" />
       
       <div className="grid lg:grid-cols-2 gap-12 relative z-10">
         <div>
-          <div className="inline-flex items-center gap-2.5 bg-green border border-green rounded-full px-3 py-1 mb-4">
-            <BarChart3 size={12} className="text-ink" />
-            <span className="text-[0.65rem] font-bold text-ink uppercase tracking-wider">Free ROI Tool</span>
+          <div className="inline-flex items-center gap-2.5 bg-opti-black text-opti-white border border-opti-black/20 rounded-full px-3 py-1 mb-4">
+            <BarChart3 size={12} className="text-opti-black" />
+            <span className="text-[0.65rem] font-bold text-opti-black uppercase tracking-wider">Free ROI Tool</span>
           </div>
-          <h3 className="text-3xl font-black text-ink tracking-tight mb-2">Revenue Leakage Calculator</h3>
-          <p className="text-sm text-gray mb-8">See exactly how much money you're leaving on the table by not having an automated sales pipeline.</p>
+          <h3 className="text-3xl font-black text-opti-black tracking-tight mb-2">Revenue Leakage Calculator</h3>
+          <p className="text-sm text-opti-gray mb-8">See exactly how much money you're leaving on the table by not having an automated sales pipeline.</p>
           
           <div className="space-y-6">
             <div>
               <div className="flex justify-between mb-2">
-                <label className="text-xs font-bold text-ink uppercase tracking-wider">Monthly Visitors / Leads</label>
-                <span className="text-sm font-bold text-green">{visitors.toLocaleString()}</span>
+                <label className="text-xs font-bold text-opti-black uppercase tracking-wider">Monthly Visitors / Leads</label>
+                <span className="text-sm font-bold text-opti-black">{visitors.toLocaleString()}</span>
               </div>
               <input 
                 type="range" min="100" max="10000" step="100" 
@@ -202,8 +202,8 @@ const RevenueCalculator = () => {
             
             <div>
               <div className="flex justify-between mb-2">
-                <label className="text-xs font-bold text-ink uppercase tracking-wider">Current Conversion Rate</label>
-                <span className="text-sm font-bold text-green">{conversion}%</span>
+                <label className="text-xs font-bold text-opti-black uppercase tracking-wider">Current Conversion Rate</label>
+                <span className="text-sm font-bold text-opti-black">{conversion}%</span>
               </div>
               <input 
                 type="range" min="0.1" max="5" step="0.1" 
@@ -214,8 +214,8 @@ const RevenueCalculator = () => {
 
             <div>
               <div className="flex justify-between mb-2">
-                <label className="text-xs font-bold text-ink uppercase tracking-wider">Average Order Value (R)</label>
-                <span className="text-sm font-bold text-green">R {aov.toLocaleString()}</span>
+                <label className="text-xs font-bold text-opti-black uppercase tracking-wider">Average Order Value (R)</label>
+                <span className="text-sm font-bold text-opti-black">R {aov.toLocaleString()}</span>
               </div>
               <input 
                 type="range" min="100" max="5000" step="50" 
@@ -227,7 +227,7 @@ const RevenueCalculator = () => {
         </div>
 
         <div className="bg-ink rounded-2xl p-8 text-white flex flex-col justify-center shadow-inner relative overflow-hidden">
-          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-green/20 rounded-full blur-[40px]" />
+          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-opti-black/10 rounded-full blur-[40px]" />
           <div className="relative z-10">
             <div className="mb-6">
               <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-1">Current Monthly Revenue</div>
@@ -236,7 +236,7 @@ const RevenueCalculator = () => {
             
             <div className="mb-6">
               <div className="text-xs font-bold text-white/50 uppercase tracking-wider mb-1">Potential With Opti-Link</div>
-              <div className="text-2xl font-bold text-green">R {Math.round(potentialRevenue).toLocaleString()}</div>
+              <div className="text-2xl font-bold text-accent">R {Math.round(potentialRevenue).toLocaleString()}</div>
             </div>
 
             <div className="pt-6 border-t border-white/10">
@@ -534,11 +534,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-opti-white selection:bg-opti-green selection:text-opti-black">
+    <div className="min-h-screen bg-opti-white selection:bg-opti-black selection:text-opti-white">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[300] bg-opti-black text-opti-white px-4 py-2 font-bold rounded-lg focus:outline-none focus:ring-4 focus:ring-opti-black/20">
+        Skip to main content
+      </a>
       {/* Navigation */}
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6",
-        scrolled ? "bg-opti-white/95 backdrop-blur-xl border-b border-opti-black/5 py-4 shadow-sm" : "py-8 bg-transparent"
+        "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6 pt-[calc(1rem+env(safe-area-inset-top))]",
+        scrolled ? "bg-opti-white/95 backdrop-blur-xl border-b border-opti-black/5 pb-4 shadow-sm" : "pb-8 pt-[calc(2rem+env(safe-area-inset-top))] bg-transparent"
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setCurrentView('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
@@ -621,9 +624,11 @@ export default function App() {
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-opti-black hover:bg-opti-lightgray rounded-lg transition-colors"
+              className="md:hidden p-3 text-opti-black hover:bg-opti-lightgray rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-opti-black flex items-center justify-center min-w-[44px] min-h-[44px]"
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -635,30 +640,30 @@ export default function App() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden overflow-hidden bg-white border-b border-bdr shadow-xl max-h-[80vh] overflow-y-auto"
+              className="md:hidden overflow-hidden bg-white border-b border-opti-black/5 shadow-xl max-h-[80vh] overflow-y-auto"
             >
-              <div className="px-6 py-6 space-y-6">
+              <div className="px-6 py-6 pb-[calc(2rem+env(safe-area-inset-bottom))] space-y-6">
                 {[
                   { label: 'Services', items: ['Shopify Build', 'Meta Ads', 'CRM & WhatsApp Automation', 'Brand Identity'] },
                   { label: 'Platform', items: ['Features', 'Integrations', 'Pricing', 'Security'] },
                   { label: 'Resources', items: ['Blog', 'Case Studies', 'ROI Calculator', 'Academy'] },
                   { label: 'Login', action: () => { setCurrentView('auth'); setMobileMenuOpen(false); }, isAuth: true }
                 ].map((cat, i) => (
-                  <div key={i} className="border-b border-bdr pb-6 last:border-0 last:pb-0">
+                  <div key={i} className="border-b border-opti-black/5 pb-6 last:border-0 last:pb-0">
                     {cat.isAuth ? (
                       <button 
                         onClick={cat.action}
-                        className="text-lg font-black text-ink uppercase tracking-tight hover:text-green-800"
+                        className="text-lg font-black text-opti-black uppercase tracking-tight hover:text-opti-black-800"
                       >
                         {cat.label}
                       </button>
                     ) : (
                       <>
-                        <h4 className="text-lg font-black text-ink uppercase tracking-tight mb-4">{cat.label}</h4>
-                        <ul className="space-y-3 pl-2 border-l-2 border-green/30">
+                        <h4 className="text-lg font-black text-opti-black uppercase tracking-tight mb-4">{cat.label}</h4>
+                        <ul className="space-y-1 pl-2 border-l-2 border-opti-black/20/30">
                           {cat.items?.map(item => (
                             <li key={item}>
-                              <a href="#" className="block text-base font-bold text-gray hover:text-ink transition-colors">
+                              <a href="#" className="block py-2.5 text-base font-bold text-opti-gray hover:text-opti-black transition-colors min-h-[44px] flex items-center">
                                 {item}
                               </a>
                             </li>
@@ -675,12 +680,19 @@ export default function App() {
       </nav>
 
       {currentView === 'landing' ? (
-        <div className="bg-opti-white">
+        <main id="main-content" className="bg-opti-white">
           {/* Hero Section */}
-          <section className="relative pt-32 pb-16 md:pt-48 md:pb-32 px-6 min-h-[95vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(182,255,59,0.08)_0%,transparent_50%)] pointer-events-none" />
+          <section className="relative pt-[calc(8rem+env(safe-area-inset-top))] pb-16 md:pt-48 md:pb-32 px-6 min-h-[95vh] flex items-center overflow-hidden bg-glow-gradient">
+        {/* Subtle grid background masked to fade out top and bottom */}
+        <div className="absolute inset-0 bg-grid-pattern [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)] opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,0,0,0.03)_0%,transparent_50%)] pointer-events-none" />
         
         <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 w-full">
+          {/* 3D Spinning Globe Background - Kept from previous request */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] pointer-events-none -z-10 flex items-center justify-center -mt-10 opacity-30">
+            <SphereLogo3D className="w-full h-full" dark={false} />
+          </div>
+          
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -691,31 +703,31 @@ export default function App() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-opti-black text-opti-green font-mono text-[10px] font-bold uppercase tracking-widest mb-10 shadow-lg shadow-opti-green/20"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-opti-black text-opti-white font-mono text-[10px] font-bold uppercase tracking-widest mb-10 shadow-lg shadow-opti-black/20"
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-opti-green animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-full bg-opti-white animate-pulse" />
               Opti-Link V2.0 is Live
             </motion.div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-[100px] font-black text-opti-black tracking-tighter leading-[0.9] mb-8 w-full">
+            <h1 className="text-5xl md:text-7xl lg:text-[100px] font-black text-opti-black tracking-tighter leading-none mb-8 w-full">
               YOUR DIGITAL INFRASTRUCTURE,<br />
-              <span className="text-opti-black bg-opti-green px-6 py-2 mt-2 inline-block rounded-lg shadow-opti-glow rotate-[-1deg]">CONSTRUCTED.</span>
+              <span className="text-ink bg-accent px-6 py-2 mt-4 inline-block rounded-lg shadow-opti-card rotate-[-1deg]">CONSTRUCTED.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-opti-gray font-medium tracking-tight mb-14 max-w-2xl leading-relaxed">
+            <p className="text-lg md:text-xl text-opti-gray font-medium tracking-tight mb-14 max-w-3xl leading-relaxed">
               We are premier digital system and infrastructure constructors. We build, manage, and scale the digital engine that top agencies and modern brands use to capture leads and drive predictable revenue.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-8 py-4 bg-opti-black text-opti-white rounded-xl font-bold text-base hover:bg-opti-green hover:text-opti-black transition-all duration-300 ease-out flex items-center justify-center gap-3 active:scale-[0.98] shadow-opti-card"
+                className="opti-button w-full sm:w-auto text-lg py-4 px-8 group gap-3 border-none ring-1 ring-ink/10"
               >
-                Calculate ROI <ArrowRight size={18} />
+                Calculate ROI <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button 
                 onClick={() => setCurrentView('auth')}
-                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-opti-black/10 text-opti-black rounded-xl font-bold text-base hover:bg-opti-black/5 transition-all duration-300 ease-out active:scale-[0.98]"
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-opti-black/10 text-opti-black rounded-xl font-bold text-base hover:border-opti-black hover:bg-opti-lightgray transition-all duration-300 ease-out active:scale-[0.98]"
               >
                 Client Portal
               </button>
@@ -725,13 +737,13 @@ export default function App() {
       </section>
 
       {/* Trusted By Section */}
-      <div className="border-y border-opti-black/5 bg-opti-lightgray py-12">
+      <div className="border-y border-opti-black/5 bg-opti-lightgray py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center font-mono text-[10px] font-bold text-opti-gray uppercase tracking-[0.3em] mb-10">Trusted by modern scaling teams globally</p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 mix-blend-multiply">
+          <p className="text-center font-mono text-xs font-bold text-opti-gray uppercase tracking-[0.3em] mb-12">Trusted by modern scaling teams globally</p>
+          <div className="flex flex-wrap justify-center items-center gap-14 md:gap-24 opacity-60 mix-blend-multiply">
             <div className="font-black text-2xl tracking-tighter text-opti-black">NEXUS<span className="font-light">GLOBAL</span></div>
             <div className="font-black text-2xl tracking-widest text-opti-black">AURA</div>
-            <div className="font-black text-2xl tracking-tighter text-opti-black">VERTEX<span className="text-opti-green">.</span></div>
+            <div className="font-black text-2xl tracking-tighter text-opti-black">VERTEX<span className="text-opti-black">.</span></div>
             <div className="font-black text-2xl tracking-tight text-opti-black">QUANTUM</div>
             <div className="font-black text-2xl tracking-widest text-opti-black">ELEVATE</div>
           </div>
@@ -742,12 +754,12 @@ export default function App() {
       <section className="bg-opti-white py-32 px-6 overflow-hidden border-b border-opti-black/5">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1fr_2fr] gap-20 items-center">
           <div>
-            <Logo className="w-32 h-32 mb-10" />
-            <div className="font-mono text-[10px] font-bold text-opti-gray uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+            <Logo className="w-32 h-32 mb-10 text-opti-black" />
+            <div className="font-mono text-[10px] font-bold text-opti-gray uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
               <div className="w-4 h-[1px] bg-opti-black/20" /> About Opti-Link
             </div>
-            <p className="text-xl text-opti-black leading-snug font-medium max-w-sm tracking-tight border-l-2 border-opti-green pl-6 py-2">
-              We are digital system and infrastructure constructors. We <strong className="bg-opti-green text-opti-black px-1.5 py-0.5 rounded">build and operate the digital engine</strong> that powers your entire growth pipeline.
+            <p className="text-xl md:text-2xl text-opti-black leading-relaxed font-medium max-w-md tracking-tight border-l-2 border-opti-black pl-6 py-2">
+              We are digital system and infrastructure constructors. We <strong className="bg-opti-black text-opti-white px-2 py-0.5 rounded leading-normal inline-block">build and operate the digital engine</strong> that powers your entire growth pipeline.
             </p>
           </div>
           
@@ -760,13 +772,13 @@ export default function App() {
               { num: 'R42k', lbl: 'Monthly revenue recovered', change: 'From automation', icon: <Banknote size={14} /> },
               { num: '5', lbl: 'Pilot slots available', change: '2 spots remaining', icon: <Hourglass size={14} /> }
             ].map((stat, i) => (
-              <div key={i} className="bg-opti-lightgray p-8 rounded-2xl border border-opti-black/5 hover:border-opti-green/50 transition-colors duration-300 group shadow-sm hover:shadow-md">
-                <div className="flex items-center gap-2 text-opti-green mb-6 bg-opti-white inline-flex px-3 py-1.5 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+              <div key={i} className="bg-opti-lightgray p-8 rounded-2xl border border-opti-black/5 hover:border-opti-black/20 transition-colors duration-300 group shadow-sm hover:shadow-md">
+                <div className="flex items-center gap-2 text-opti-black mb-6 bg-opti-white inline-flex px-3 py-1.5 rounded-lg shadow-sm border border-opti-black/5">
                   {stat.icon}
                   <span className="text-[10px] font-bold uppercase tracking-wider text-opti-black">{stat.change}</span>
                 </div>
-                <div className="text-4xl font-black text-opti-black tracking-tighter mb-2 group-hover:-translate-y-1 transition-transform duration-300">{stat.num}</div>
-                <div className="text-sm font-semibold text-opti-gray">{stat.lbl}</div>
+                <div className="text-4xl font-black text-opti-black tracking-tighter mb-3 group-hover:-translate-y-1 transition-transform duration-300">{stat.num}</div>
+                <div className="text-sm font-semibold text-opti-gray leading-snug">{stat.lbl}</div>
               </div>
             ))}
           </div>
@@ -777,16 +789,16 @@ export default function App() {
       <div className="bg-opti-white border-y border-opti-black/5 py-12 px-6">
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
           {[
-            { icon: <Target className="text-opti-black" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. Our costs are subsidized by software partners — you see results first, every time.' },
-            { icon: <Rocket className="text-opti-black" />, title: 'Live in 7 Days or We Walk', desc: 'If your digital system isn\'t fully functional within 7 days, no service fees are charged. Hard deadline, every client.' },
-            { icon: <TrendingUp className="text-opti-black" />, title: 'Revenue-Focused Only', desc: 'We don\'t report on vanity metrics. We track leads, conversions, and revenue attributed directly to your digital system.' }
+            { icon: <Target className="text-opti-white" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. Our costs are subsidized by software partners — you see results first, every time.' },
+            { icon: <Rocket className="text-opti-white" />, title: 'Live in 7 Days or We Walk', desc: 'If your digital system isn\'t fully functional within 7 days, no service fees are charged. Hard deadline, every client.' },
+            { icon: <TrendingUp className="text-opti-white" />, title: 'Revenue-Focused Only', desc: 'We don\'t report on vanity metrics. We track leads, conversions, and revenue attributed directly to your digital system.' }
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-opti-green shadow-opti-glow flex items-center justify-center flex-shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-opti-black shadow-opti-card flex items-center justify-center flex-shrink-0">
                 {item.icon}
               </div>
               <div>
-                <h4 className="text-base font-bold text-opti-black mb-1.5 tracking-tight">{item.title}</h4>
+                <h4 className="text-lg font-bold text-opti-black mb-2 tracking-tight">{item.title}</h4>
                 <p className="text-sm text-opti-gray leading-relaxed font-medium">{item.desc}</p>
               </div>
             </div>
@@ -799,9 +811,9 @@ export default function App() {
         <div className="grid lg:grid-cols-2 gap-12 items-end mb-16">
           <div>
             <Eyebrow>What we do</Eyebrow>
-            <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
+            <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-6">
               EVERYTHING YOUR<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUSINESS NEEDS</span>
+              <span className="bg-opti-black text-opti-white px-4 py-1 mt-2 inline-block">BUSINESS NEEDS</span>
             </h2>
           </div>
           <div>
@@ -815,15 +827,15 @@ export default function App() {
             { icon: <ShoppingCart />, title: 'Implementation Package', desc: 'Full setup of your online store, hosting, domain, CRM, and automation tools.', tags: ['Shopify', 'CRM', 'Automation'] },
             { icon: <TrendingUp />, title: 'Monthly Retainer', desc: 'Ongoing marketing operations, ad management, content creation, and automation upgrades.', tags: ['Ads', 'Content', 'Growth'] }
           ].map((svc, i) => (
-            <div key={i} className="bg-white p-10 rounded-[2rem] border border-bdr-d shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-500 ease-out group">
-              <div className="w-16 h-16 rounded-2xl bg-green border border-ink/10 flex items-center justify-center text-ink mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-sm">
+            <div key={i} className="bg-white p-10 rounded-[2rem] border border-opti-black/10 shadow-sm hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-500 ease-out group">
+              <div className="w-16 h-16 rounded-2xl bg-opti-black text-opti-white border border-ink/10 flex items-center justify-center text-opti-black mb-8 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-sm">
                 {React.cloneElement(svc.icon as any, { strokeWidth: 1.5, className: 'group-hover:stroke-[2px] transition-all duration-300' })}
               </div>
-              <h3 className="text-xl font-black text-ink mb-4 tracking-tight">{svc.title}</h3>
-              <p className="text-sm text-gray leading-relaxed mb-8">{svc.desc}</p>
+              <h3 className="text-2xl font-black text-opti-black mb-4 tracking-tight">{svc.title}</h3>
+              <p className="text-base text-opti-gray leading-relaxed mb-8">{svc.desc}</p>
               <div className="flex flex-wrap gap-2">
                 {svc.tags.map(tag => (
-                  <span key={tag} className="font-mono text-[10px] font-bold bg-cream border border-bdr-d rounded-md px-3 py-1.5 text-gray uppercase tracking-wider group-hover:bg-green/10 group-hover:border-green/30 group-hover:text-green-800 transition-colors duration-300">
+                  <span key={tag} className="font-mono text-[10px] font-bold bg-opti-white border border-opti-black/10 rounded-md px-3 py-1.5 text-opti-gray uppercase tracking-wider group-hover:bg-opti-black/5 group-hover:border-opti-black/20/30 group-hover:text-opti-black-800 transition-colors duration-300">
                     {tag}
                   </span>
                 ))}
@@ -836,9 +848,9 @@ export default function App() {
       {/* Process Section */}
       <Section id="features">
         <Eyebrow centered>The process</Eyebrow>
-        <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
+        <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-4 text-center">
           LIVE AND SELLING<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">IN 14 DAYS</span>
+          <span className="bg-opti-black text-opti-white px-4 py-1 mt-2 inline-block">IN 14 DAYS</span>
         </h2>
         <Subheading centered className="mb-20">A simple 5-step plan that takes your business from "just a shop" to a digital machine — starting from wherever you are today.</Subheading>
         
@@ -853,31 +865,31 @@ export default function App() {
               { phase: '05', title: 'Launch & Optimisation', desc: 'Weekly reporting, KPI measurement, and retainer proposals.', icon: <Trophy /> }
             ].map((step, i) => (
               <div key={i} className="relative z-10 text-center group">
-                <div className="w-16 h-16 rounded-2xl bg-green flex items-center justify-center mx-auto mb-6 text-ink shadow-sm group-hover:scale-110 transition-transform duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(200,240,96,0.6)]">
+                <div className="w-16 h-16 rounded-2xl bg-opti-black text-opti-white flex items-center justify-center mx-auto mb-6 text-opti-black shadow-sm group-hover:scale-110 transition-transform duration-500 ease-out group-hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.2)]">
                   <span className="font-black text-2xl group-hover:hidden">{step.phase}</span>
                   <span className="hidden group-hover:block transition-all duration-300">
                     {React.cloneElement(step.icon as any, { strokeWidth: 2 })}
                   </span>
                 </div>
-                <h4 className="text-sm font-bold text-ink mb-2 tracking-tight group-hover:text-green-800 transition-colors duration-300">{step.title}</h4>
-                <p className="text-xs text-gray leading-relaxed group-hover:text-ink transition-colors duration-300">{step.desc}</p>
+                <h4 className="text-base font-bold text-opti-black mb-3 tracking-tight group-hover:text-opti-black-800 transition-colors duration-300">{step.title}</h4>
+                <p className="text-sm text-opti-gray leading-relaxed group-hover:text-opti-black transition-colors duration-300">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-20 bg-cream2 border border-bdr p-12 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden">
+        <div className="mt-20 bg-opti-lightgray border border-opti-black/5 p-12 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden">
           <div>
-            <h3 className="text-3xl md:text-4xl font-black text-ink tracking-tight mb-4 leading-tight">
+            <h3 className="text-3xl md:text-5xl font-black text-opti-black tracking-tight mb-6 leading-tight">
               The free pilot model —<br />how it actually works.
             </h3>
-            <p className="text-gray text-lg leading-relaxed max-w-2xl">
-              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="bg-green text-ink px-1">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 7 days, guaranteed, with zero risk.
+            <p className="text-opti-gray text-lg md:text-xl leading-relaxed max-w-3xl">
+              Looking to scale without the upfront risk? We build your entire digital engine at <strong className="bg-opti-black text-opti-white px-2 py-0.5 rounded inline-block">zero upfront cost</strong>. We set up the core software tools your business needs to grow. Our costs are subsidized through strategic software partnerships, meaning you get a full setup delivered in 7 days, guaranteed, with zero risk.
             </p>
           </div>
           <button 
             onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-green text-ink px-10 py-5 font-black text-lg hover:bg-green-h transition-all whitespace-nowrap"
+            className="opti-button px-10 py-5 text-lg font-black whitespace-nowrap hidden md:inline-flex border-[1.5px] border-[#000]"
           >
             Start free pilot
             <ArrowRight size={20} className="inline ml-3" />
@@ -890,9 +902,9 @@ export default function App() {
       {/* Pricing Section */}
       <Section id="pricing" alt>
         <Eyebrow centered>Pricing</Eyebrow>
-        <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
+        <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-4 text-center">
           SIMPLE, HONEST<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">PRICING</span>
+          <span className="bg-opti-black text-opti-white px-4 py-1 mt-2 inline-block">PRICING</span>
         </h2>
         <Subheading centered className="mb-16">Monthly retainers, 3-month minimum. Paid setup or free pilot — no hidden fees, no surprises.</Subheading>
 
@@ -922,27 +934,27 @@ export default function App() {
               "relative p-10 rounded-3xl border transition-all duration-500 ease-out",
               plan.popular 
                 ? "bg-ink border-ink scale-105 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] z-10 hover:scale-[1.07]" 
-                : "bg-white border-bdr hover:border-green/30 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2"
+                : "bg-white border-opti-black/5 hover:border-opti-black/20 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2"
             )}>
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green text-ink text-[0.65rem] font-black px-5 py-1.5 uppercase tracking-widest shadow-lg rounded-full">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-opti-black text-opti-white text-[0.65rem] font-black px-5 py-1.5 uppercase tracking-widest shadow-lg rounded-full">
                   Most Popular
                 </div>
               )}
-              <div className={cn("text-[0.65rem] font-black uppercase tracking-[0.25em] mb-4", plan.popular ? "text-white/30" : "text-gray-lt")}>
+              <div className={cn("text-[0.65rem] font-black uppercase tracking-[0.25em] mb-4", plan.popular ? "text-white/30" : "text-opti-gray")}>
                 {plan.name}
               </div>
-              <div className={cn("text-5xl font-black tracking-tighter mb-2", plan.popular ? "text-white" : "text-ink")}>
-                {plan.price}<span className={cn("text-sm font-normal tracking-normal transition-colors", plan.popular ? "text-white/30" : "text-gray-lt")}>/mo</span>
+              <div className={cn("text-5xl font-black tracking-tighter mb-2", plan.popular ? "text-white" : "text-opti-black")}>
+                {plan.price}<span className={cn("text-sm font-normal tracking-normal transition-colors", plan.popular ? "text-white/30" : "text-opti-gray")}>/mo</span>
               </div>
-              <p className={cn("text-[0.75rem] leading-relaxed mb-8", plan.popular ? "text-white/30" : "text-gray-lt")}>
+              <p className={cn("text-[0.75rem] leading-relaxed mb-8", plan.popular ? "text-white/30" : "text-opti-gray")}>
                 {plan.note}
               </p>
               <div className={cn("h-px w-full mb-8", plan.popular ? "bg-white/10" : "bg-bdr")} />
               <ul className="space-y-4 mb-10">
                 {plan.feats.map(feat => (
-                  <li key={feat} className={cn("flex items-start gap-3 text-sm font-bold", plan.popular ? "text-white/70" : "text-ink3")}>
-                    <Check size={16} className={cn("mt-0.5 flex-shrink-0 transition-transform duration-300", plan.popular ? "text-green" : "text-ink")} />
+                  <li key={feat} className={cn("flex items-start gap-3 text-sm font-bold", plan.popular ? "text-white/70" : "text-opti-black3")}>
+                    <Check size={16} className={cn("mt-0.5 flex-shrink-0 transition-transform duration-300", plan.popular ? "text-white" : "text-opti-black")} />
                     {feat}
                   </li>
                 ))}
@@ -950,10 +962,10 @@ export default function App() {
               <button 
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
                 className={cn(
-                "w-full py-4 font-bold text-sm transition-all duration-300 hover:shadow-lg rounded-xl active:scale-95",
+                "w-full py-4 font-bold text-sm transition-all duration-300 hover:shadow-lg rounded-xl active:scale-95 border-2",
                 plan.popular 
-                  ? "bg-green text-ink hover:bg-green-h hover:shadow-green/20" 
-                  : "bg-cream border-2 border-bdr text-ink hover:bg-ink hover:text-white hover:border-ink"
+                  ? "bg-white text-opti-black border-transparent hover:bg-opti-lightgray shadow-[0_4px_14px_0_rgba(255,255,255,0.1)] hover:shadow-[0_6px_20px_rgba(255,255,255,0.15)]" 
+                  : "bg-opti-white border-opti-black/10 text-opti-black hover:bg-opti-black hover:text-white hover:border-opti-black"
               )}>
                 Get started
               </button>
@@ -965,9 +977,9 @@ export default function App() {
       {/* Testimonials Section */}
       <Section id="results">
         <Eyebrow centered>Client results</Eyebrow>
-        <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
+        <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-4 text-center">
           SMMES GROWING<br />
-          <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">WITH OPTI-LINK</span>
+          <span className="bg-opti-black text-opti-white px-4 py-1 mt-2 inline-block">WITH OPTI-LINK</span>
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
           {[
@@ -975,18 +987,18 @@ export default function App() {
             { name: 'Kagiso Dlamini', role: 'Co-founder, Kasi Fresh Foods — Durban', quote: "Month two we saw a 40% increase in repeat orders after Opti-Link built our CRM and WhatsApp pipeline. The retainer pays for itself every single month without question.", color: '#1e3a8a' },
             { name: 'Nandi Pieterse', role: 'Director, NP Design Studio — Cape Town', quote: "They built a lead funnel and automated my quote follow-ups. I booked R80,000 in new contracts in 30 days. As a service business I didn't think this model applied to me.", color: '#6d28d9' }
           ].map((testi, i) => (
-            <div key={i} className="bg-cream border border-bdr rounded-[2rem] p-10 flex flex-col gap-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 hover:bg-white group cursor-default">
-              <div className="flex gap-1 text-ink/20 group-hover:text-green transition-colors duration-300">
+            <div key={i} className="bg-opti-white border border-opti-black/5 rounded-[2rem] p-10 flex flex-col gap-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-2 hover:bg-white group cursor-default">
+              <div className="flex gap-1 text-opti-black/20 group-hover:text-opti-black transition-colors duration-300">
                 {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
               </div>
-              <p className="text-lg text-gray italic leading-relaxed flex-1 group-hover:text-ink transition-colors duration-300">"{testi.quote}"</p>
-              <div className="pt-8 border-t border-bdr flex items-center gap-4">
+              <p className="text-lg text-opti-gray italic leading-relaxed flex-1 group-hover:text-opti-black transition-colors duration-300">"{testi.quote}"</p>
+              <div className="pt-8 border-t border-opti-black/5 flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-xs tracking-widest shadow-sm group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: testi.color }}>
                   {testi.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-ink tracking-tight">{testi.name}</div>
-                  <div className="text-[0.7rem] text-gray-lt font-bold">{testi.role}</div>
+                  <div className="text-base font-bold text-opti-black tracking-tight">{testi.name}</div>
+                  <div className="text-[0.65rem] text-opti-gray font-bold uppercase tracking-widest mt-0.5">{testi.role}</div>
                 </div>
               </div>
             </div>
@@ -998,37 +1010,37 @@ export default function App() {
       <Section id="why-us" className="bg-white">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="relative">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-green/20 rounded-full blur-3xl" />
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-opti-black/10 rounded-full blur-3xl" />
             <img 
               src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=1000" 
               alt="Team collaboration" 
-              className="rounded-[2.5rem] shadow-2xl relative z-10 border border-bdr"
+              className="rounded-[2.5rem] shadow-2xl relative z-10 border border-opti-black/5"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute -bottom-6 -right-6 bg-green text-ink p-8 shadow-2xl z-20 max-w-[240px]">
+            <div className="absolute -bottom-6 -right-6 bg-opti-black text-opti-white p-8 shadow-2xl z-20 max-w-[240px]">
               <div className="text-3xl font-black mb-2">100%</div>
               <p className="text-xs font-bold uppercase tracking-widest leading-relaxed">Focus on your business growth, not just tech.</p>
             </div>
           </div>
           <div>
             <Eyebrow>Why choose us</Eyebrow>
-            <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
+            <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-8">
               WE DON'T JUST BUILD WEBSITES.<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">WE BUILD BUSINESSES.</span>
+              <span className="bg-opti-black text-opti-white px-4 py-2 mt-4 inline-block shadow-sm">WE BUILD BUSINESSES.</span>
             </h2>
-            <div className="space-y-8 mt-10">
+            <div className="space-y-10 mt-12">
               {[
                 { title: 'We speak your language', desc: 'No technical jargon. We talk about customers, sales, and profit — the things that actually matter to your business.' },
                 { title: 'Results in 14 days', desc: 'We don\'t take months to deliver. Our systems are built to start working for you in two weeks or less.' },
                 { title: 'Zero risk to start', desc: 'With our free pilot model, you can see the system working before you commit to a long-term partnership.' }
               ].map((item, i) => (
                 <div key={i} className="flex gap-6">
-                  <div className="w-10 h-10 bg-green text-ink flex items-center justify-center flex-shrink-0 font-bold">
+                  <div className="w-10 h-10 bg-opti-black text-opti-white flex items-center justify-center flex-shrink-0 font-bold">
                     {i + 1}
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold text-ink mb-2 tracking-tight">{item.title}</h4>
-                    <p className="text-sm text-gray leading-relaxed">{item.desc}</p>
+                    <h4 className="text-lg font-bold text-opti-black mb-2 tracking-tight">{item.title}</h4>
+                    <p className="text-sm text-opti-gray leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -1038,18 +1050,18 @@ export default function App() {
       </Section>
 
       {/* Survey Funnel Section */}
-      <Section id="survey" className="bg-cream2">
+      <Section id="survey" className="bg-opti-lightgray">
         <div className="text-center mb-16">
           <Eyebrow centered>Free Business Audit</Eyebrow>
-          <h2 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 text-center">
+          <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-8 text-center">
             FIND OUT EXACTLY WHERE YOUR<br />
-            <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">BUSINESS IS LOSING MONEY</span>
+            <span className="bg-accent text-ink px-4 py-2 mt-4 inline-block shadow-sm">BUSINESS IS LOSING MONEY</span>
           </h2>
-          <Subheading centered>Answer 15 simple questions. We'll show you how to find more customers and grow your profit — free, with no strings attached.</Subheading>
+          <Subheading centered className="max-w-3xl mx-auto">Answer 15 simple questions. We'll show you how to find more customers and grow your profit — free, with no strings attached.</Subheading>
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white border border-bdr rounded-[2rem] overflow-hidden shadow-2xl shadow-ink/5">
+          <div className="bg-white border border-opti-black/5 rounded-[2rem] overflow-hidden shadow-2xl shadow-ink/5">
             <AnimatePresence mode="wait">
               {surveyStep <= 15 ? (
                 <motion.div
@@ -1061,12 +1073,12 @@ export default function App() {
                 >
                   <div className="p-8 pb-0">
                     <div className="flex justify-between items-center mb-4">
-                      <span className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest">Business Health Check</span>
-                      <span className="text-[0.65rem] font-bold text-ink bg-green px-2 py-1 rounded uppercase tracking-widest">Step {surveyStep} of 15</span>
+                      <span className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest">Business Health Check</span>
+                      <span className="text-[0.65rem] font-bold text-opti-black bg-opti-black text-opti-white px-2 py-1 rounded uppercase tracking-widest">Step {surveyStep} of 15</span>
                     </div>
-                    <div className="h-1 w-full bg-cream2 rounded-full overflow-hidden">
+                    <div className="h-1 w-full bg-opti-lightgray rounded-full overflow-hidden">
                       <motion.div 
-                        className="h-full bg-green"
+                        className="h-full bg-opti-black text-opti-white"
                         animate={{ width: `${(surveyStep / 15) * 100}%` }}
                         transition={{ ease: "easeInOut", duration: 0.5 }}
                       />
@@ -1076,10 +1088,10 @@ export default function App() {
                   <div className="p-12">
                     <div className="space-y-8">
                       <div>
-                        <h3 className="text-2xl font-black text-ink tracking-tight mb-2">
+                        <h3 className="text-2xl font-black text-opti-black tracking-tight mb-2">
                           {QUESTIONS[surveyStep - 1].title}
                         </h3>
-                        <p className="text-sm text-gray-lt">
+                        <p className="text-sm text-opti-gray">
                           {QUESTIONS[surveyStep - 1].sub}
                         </p>
                       </div>
@@ -1091,27 +1103,27 @@ export default function App() {
                             className={cn(
                               "relative flex items-center gap-4 p-5 rounded-2xl border-2 w-full text-left transition-all duration-300 ease-out group overflow-hidden",
                               answers[surveyStep]?.val === opt.val 
-                                ? "bg-green/10 border-green shadow-[0_4px_20px_-4px_rgba(200,240,96,0.3)]" 
-                                : "bg-cream border-cream3 hover:border-green/50 hover:bg-white hover:shadow-lg hover:shadow-ink/5 hover:-translate-y-[2px]"
+                                ? "bg-opti-black/5 border-opti-black/20 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.15)]" 
+                                : "bg-opti-white border-opti-black/10 hover:border-opti-black/20/50 hover:bg-white hover:shadow-lg hover:shadow-ink/5 hover:-translate-y-[2px]"
                             )}
                           >
                             <div className={cn(
                               "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ease-out",
                               answers[surveyStep]?.val === opt.val 
-                                ? "bg-green text-ink scale-110 shadow-sm" 
-                                : "bg-white border border-bdr-d text-ink group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-green/10 group-hover:border-green/50 group-hover:text-green-700"
+                                ? "bg-opti-black text-opti-white scale-110 shadow-sm" 
+                                : "bg-white border border-opti-black/10 text-opti-black group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-opti-black/5 group-hover:border-opti-black/20/50 group-hover:text-opti-black-700"
                             )}>
                               <div className="scale-90 transition-transform duration-300 group-hover:scale-100 relative">
                                 {opt.icon && React.cloneElement(opt.icon as any, { strokeWidth: answers[surveyStep]?.val === opt.val ? 2.5 : 1.5 })}
                               </div>
                             </div>
                             <div className="flex-1">
-                              <strong className="block text-sm font-bold text-ink tracking-tight">{opt.title}</strong>
-                              <span className="block text-[0.7rem] text-gray leading-tight mt-0.5 pr-6">{opt.sub}</span>
+                              <strong className="block text-sm font-bold text-opti-black tracking-tight">{opt.title}</strong>
+                              <span className="block text-[0.7rem] text-opti-gray leading-tight mt-0.5 pr-6">{opt.sub}</span>
                             </div>
                             {/* Checkmark indicator for selected state */}
                             {answers[surveyStep]?.val === opt.val && (
-                              <div className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 bg-green rounded-full flex items-center justify-center text-ink shadow-sm animate-in zoom-in duration-200">
+                              <div className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 bg-opti-black text-opti-white rounded-full flex items-center justify-center text-opti-black shadow-sm animate-in zoom-in duration-200">
                                 <Check size={14} strokeWidth={3} />
                               </div>
                             )}
@@ -1120,18 +1132,18 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="mt-12 pt-8 border-t border-bdr flex justify-between items-center">
+                    <div className="mt-12 pt-8 border-t border-opti-black/5 flex justify-between items-center">
                       <button 
                         onClick={prevStep}
                         disabled={surveyStep === 1}
-                        className="text-sm font-bold text-gray hover:text-ink disabled:opacity-0 transition-colors duration-200"
+                        className="text-sm font-bold text-opti-gray hover:text-opti-black disabled:opacity-0 transition-colors duration-200"
                       >
                         Back
                       </button>
                       <button 
                         onClick={nextStep}
                         disabled={!answers[surveyStep]}
-                        className="bg-ink text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-green disabled:opacity-30 disabled:hover:bg-ink transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                        className="opti-button px-8 py-3 text-sm flex items-center gap-2 disabled:opacity-30 border-[1.5px] border-[#000]"
                       >
                         {surveyStep === 15 ? "See my results" : "Continue"}
                         <ArrowRight size={16} />
@@ -1146,51 +1158,51 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   className="p-10 text-center"
                 >
-                  <div className="w-24 h-24 rounded-full border-2 border-green flex flex-col items-center justify-center mx-auto mb-6">
-                    <span className="text-4xl font-black text-ink bg-green px-2 py-1 tracking-tighter leading-none">{totalScore}</span>
-                    <span className="text-[0.5rem] font-bold text-gray-lt uppercase tracking-widest mt-1">/ 45</span>
+                  <div className="w-24 h-24 rounded-full border-2 border-opti-black/20 flex flex-col items-center justify-center mx-auto mb-6">
+                    <span className="text-4xl font-black text-ink bg-accent px-2 py-1 tracking-tighter leading-none shadow-sm">{totalScore}</span>
+                    <span className="text-[0.5rem] font-bold text-opti-gray uppercase tracking-widest mt-1">/ 45</span>
                   </div>
-                  <div className="inline-block bg-green border border-ink/20 rounded-full px-5 py-1.5 mb-6 text-[0.75rem] font-bold text-ink uppercase tracking-wider">
+                  <div className="inline-block bg-accent text-ink border border-ink/20 rounded-full px-5 py-1.5 mb-6 text-[0.75rem] font-bold text-opti-black uppercase tracking-wider shadow-sm">
                     {getPhaseInfo().phase}
                   </div>
-                  <h3 className="text-2xl font-black text-ink tracking-tight mb-2 leading-tight">Your Business Health Report is ready.</h3>
-                  <p className="text-sm text-gray leading-relaxed max-w-md mx-auto mb-10">
+                  <h3 className="text-2xl font-black text-opti-black tracking-tight mb-2 leading-tight">Your Business Health Report is ready.</h3>
+                  <p className="text-sm text-opti-gray leading-relaxed max-w-md mx-auto mb-10">
                     Enter your details below to unlock your personalised growth plan and see exactly where you're losing money.
                   </p>
                   
-                  <div className="bg-green border border-ink/20 rounded-xl p-4 flex items-center gap-4 text-left text-ink font-semibold text-xs mb-10">
-                    <Check size={18} className="flex-shrink-0 text-ink" />
+                  <div className="bg-opti-black text-opti-white border border-ink/20 rounded-xl p-4 flex items-center gap-4 text-left text-opti-black font-semibold text-xs mb-10">
+                    <Check size={18} className="flex-shrink-0 text-opti-black" />
                     <span>Your report includes a 14-day growth roadmap and a free pilot offer.</span>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="text-left space-y-1.5">
-                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Full Name <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.fullName} onChange={(e) => setSurveyForm(prev => ({...prev, fullName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="e.g. Jane Doe" />
+                        <label className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest pl-1">Full Name <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.fullName} onChange={(e) => setSurveyForm(prev => ({...prev, fullName: e.target.value}))} required className="w-full p-4 bg-opti-white border-2 border-opti-black/10 rounded-xl text-sm outline-none focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/20 transition-all duration-300" placeholder="e.g. Jane Doe" />
                       </div>
                       <div className="text-left space-y-1.5">
-                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Business Name <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.businessName} onChange={(e) => setSurveyForm(prev => ({...prev, businessName: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="Your Company Ltd" />
+                        <label className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest pl-1">Business Name <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.businessName} onChange={(e) => setSurveyForm(prev => ({...prev, businessName: e.target.value}))} required className="w-full p-4 bg-opti-white border-2 border-opti-black/10 rounded-xl text-sm outline-none focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/20 transition-all duration-300" placeholder="Your Company Ltd" />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="text-left space-y-1.5">
-                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">WhatsApp Number <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.phone} onChange={(e) => setSurveyForm(prev => ({...prev, phone: e.target.value}))} required type="tel" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="+27 XX XXX XXXX" />
+                        <label className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest pl-1">WhatsApp Number <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.phone} onChange={(e) => setSurveyForm(prev => ({...prev, phone: e.target.value}))} required type="tel" className="w-full p-4 bg-opti-white border-2 border-opti-black/10 rounded-xl text-sm outline-none focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/20 transition-all duration-300" placeholder="+27 XX XXX XXXX" />
                       </div>
                       <div className="text-left space-y-1.5">
-                        <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Email <span className="text-red-500">*</span></label>
-                        <input value={surveyForm.email} onChange={(e) => setSurveyForm(prev => ({...prev, email: e.target.value}))} required type="email" className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="jane@example.com" />
+                        <label className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest pl-1">Email <span className="text-red-500">*</span></label>
+                        <input value={surveyForm.email} onChange={(e) => setSurveyForm(prev => ({...prev, email: e.target.value}))} required type="email" className="w-full p-4 bg-opti-white border-2 border-opti-black/10 rounded-xl text-sm outline-none focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/20 transition-all duration-300" placeholder="jane@example.com" />
                       </div>
                     </div>
                     <div className="text-left space-y-1.5">
-                      <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Website or Social Profile</label>
-                      <input value={surveyForm.website} onChange={(e) => setSurveyForm(prev => ({...prev, website: e.target.value}))} className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300" placeholder="https://..." />
+                      <label className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest pl-1">Website or Social Profile</label>
+                      <input value={surveyForm.website} onChange={(e) => setSurveyForm(prev => ({...prev, website: e.target.value}))} className="w-full p-4 bg-opti-white border-2 border-opti-black/10 rounded-xl text-sm outline-none focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/20 transition-all duration-300" placeholder="https://..." />
                     </div>
                     <div className="text-left space-y-1.5">
-                      <label className="text-[0.65rem] font-bold text-gray-lt uppercase tracking-widest pl-1">Interested Package <span className="text-red-500">*</span></label>
-                      <select value={surveyForm.interest} onChange={(e) => setSurveyForm(prev => ({...prev, interest: e.target.value}))} required className="w-full p-4 bg-cream border-2 border-cream3 rounded-xl text-sm outline-none focus:border-green focus:bg-white focus:ring-4 focus:ring-green/20 transition-all duration-300 appearance-none cursor-pointer">
+                      <label className="text-[0.65rem] font-bold text-opti-gray uppercase tracking-widest pl-1">Interested Package <span className="text-red-500">*</span></label>
+                      <select value={surveyForm.interest} onChange={(e) => setSurveyForm(prev => ({...prev, interest: e.target.value}))} required className="w-full p-4 bg-opti-white border-2 border-opti-black/10 rounded-xl text-sm outline-none focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/20 transition-all duration-300 appearance-none cursor-pointer">
                         <option value="">Select an option...</option>
                         <option value="Entry">Entry — R3,500/mo</option>
                         <option value="Growth">Growth — R5,500/mo</option>
@@ -1202,26 +1214,26 @@ export default function App() {
                     <button 
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-ink text-white py-5 rounded-xl font-black text-lg flex items-center justify-center gap-3 hover:bg-green hover:text-ink hover:-translate-y-1 transition-all duration-300 ease-out shadow-lg hover:shadow-2xl hover:shadow-green/30 disabled:opacity-50 active:scale-95"
+                      className="w-full bg-ink text-white py-5 rounded-xl font-black text-lg flex items-center justify-center gap-3 hover:bg-opti-black text-opti-white hover:text-opti-black hover:-translate-y-1 transition-all duration-300 ease-out shadow-lg hover:shadow-2xl hover:shadow-opti-black/30 disabled:opacity-50 active:scale-95"
                     >
                       {isSubmitting ? <Loader2 className="animate-spin" /> : <ClipboardCheck size={20} />}
                       Send Me My Free Audit Report
                     </button>
                   </form>
                   
-                  <div className="flex items-center gap-4 my-6 text-[0.7rem] text-gray-lt font-bold uppercase tracking-widest">
+                  <div className="flex items-center gap-4 my-6 text-[0.7rem] text-opti-gray font-bold uppercase tracking-widest">
                     <div className="h-px flex-1 bg-bdr" /> or <div className="h-px flex-1 bg-bdr" />
                   </div>
 
                   <a 
                     href="mailto:support@optilinkgroup.com"
-                    className="w-full py-4 rounded-xl bg-green border-2 border-ink/20 text-ink font-bold text-sm flex items-center justify-center gap-3 hover:bg-green-h transition-all"
+                    className="w-full py-4 rounded-xl bg-opti-black text-opti-white border-2 border-ink/20 text-opti-black font-bold text-sm flex items-center justify-center gap-3 hover:bg-opti-black text-opti-white-h transition-all"
                   >
                     <MessageSquare size={18} />
                     Email us directly instead
                   </a>
 
-                  <p className="mt-8 text-[0.65rem] text-gray-lt flex items-center justify-center gap-2">
+                  <p className="mt-8 text-[0.65rem] text-opti-gray flex items-center justify-center gap-2">
                     <Lock size={12} /> Your information stays private. We only use it to prepare your audit.
                   </p>
                 </motion.div>
@@ -1232,11 +1244,11 @@ export default function App() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="p-16 text-center"
                 >
-                  <div className="w-20 h-20 rounded-full bg-green border-2 border-ink/20 flex items-center justify-center mx-auto mb-8 text-ink">
+                  <div className="w-20 h-20 rounded-full bg-opti-black text-opti-white border-2 border-ink/20 flex items-center justify-center mx-auto mb-8 text-opti-black">
                     <Check size={40} />
                   </div>
-                  <h3 className="text-3xl font-black text-ink tracking-tight mb-4">Your audit is on its way!</h3>
-                  <p className="text-gray leading-relaxed mb-12">We'll WhatsApp you within 2 hours to confirm your free 15-minute strategy call.</p>
+                  <h3 className="text-3xl font-black text-opti-black tracking-tight mb-4">Your audit is on its way!</h3>
+                  <p className="text-opti-gray leading-relaxed mb-12">We'll WhatsApp you within 2 hours to confirm your free 15-minute strategy call.</p>
                   
                   <div className="space-y-4 text-left max-w-sm mx-auto mb-12">
                     {[
@@ -1245,8 +1257,8 @@ export default function App() {
                       'We jump on a 15-minute call and show you exactly how to fix it',
                       'You choose: free pilot or paid setup — zero pressure, ever'
                     ].map((step, i) => (
-                      <div key={i} className="flex items-start gap-4 text-sm text-ink3 font-bold">
-                        <div className="w-7 h-7 rounded-full bg-green border border-ink/20 flex items-center justify-center text-[0.65rem] font-black text-ink flex-shrink-0 mt-0.5">
+                      <div key={i} className="flex items-start gap-4 text-sm text-opti-black3 font-bold">
+                        <div className="w-7 h-7 rounded-full bg-opti-black text-opti-white border border-ink/20 flex items-center justify-center text-[0.65rem] font-black text-opti-black flex-shrink-0 mt-0.5">
                           {i + 1}
                         </div>
                         {step}
@@ -1256,7 +1268,7 @@ export default function App() {
 
                   <a 
                     href="mailto:support@optilinkgroup.com"
-                    className="bg-ink text-white px-10 py-4 rounded-xl font-bold text-base flex items-center gap-3 hover:bg-green transition-all mx-auto"
+                    className="opti-button px-10 py-4 text-base gap-3 mx-auto flex w-fit"
                   >
                     <MessageSquare size={20} />
                     Email us to fast-track
@@ -1269,35 +1281,35 @@ export default function App() {
       </Section>
 
       {/* Footer */}
-      <footer className="bg-white pt-24 pb-12 px-6 border-t border-bdr">
+      <footer className="bg-white pt-24 pb-[calc(3rem+env(safe-area-inset-bottom))] px-6 border-t border-opti-black/5">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
             <div>
               <div className="flex items-center gap-4 mb-8">
                 <Logo className="w-16 h-16" />
                 <div className="leading-none">
-                  <strong className="block text-lg font-black text-ink tracking-tight">Opti-Link</strong>
-                  <span className="block text-[0.6rem] font-bold text-gray uppercase tracking-[0.2em]">Media Group</span>
+                  <strong className="block text-lg font-black text-opti-black tracking-tight">Opti-Link</strong>
+                  <span className="block text-[0.6rem] font-bold text-opti-gray uppercase tracking-[0.2em]">Media Group</span>
                 </div>
               </div>
-              <p className="text-sm text-gray leading-relaxed max-w-xs">
+              <p className="text-sm text-opti-gray leading-relaxed max-w-xs">
                 Your premier global digital growth partner. We build, automate, and operate your online business so you can focus on what matters.
               </p>
             </div>
 
             {[
               { title: 'Services', links: ['Ecommerce Setup', 'WhatsApp Automation', 'CRM & Workflows', 'Social Media', 'Paid Ads'] },
-              { title: 'Global Offices', links: ['Cape Town (HQ)', 'London', 'Dubai', 'Singapore'] },
+              { title: 'Contact', links: ['Cape Town (HQ)', 'hello@optilinkmedia.com'] },
               { title: 'Legal & Security', links: ['Trust Center', 'SOC 2 Compliance', 'GDPR Readiness', 'Privacy Policy'] }
             ].map((col, i) => (
               <div key={i}>
-                <h5 className="text-[0.65rem] font-black text-gray-lt uppercase tracking-[0.3em] mb-8">{col.title}</h5>
+                <h5 className="text-[0.65rem] font-black text-opti-gray uppercase tracking-[0.3em] mb-8">{col.title}</h5>
                 <ul className="space-y-4">
                   {col.links.map(link => (
                     <li key={link}>
                       <a 
                         href={link.includes('@') ? `mailto:${link}` : "#"} 
-                        className="text-sm text-gray hover:text-ink transition-colors"
+                        className="text-sm text-opti-gray hover:text-opti-black transition-colors"
                       >
                         {link}
                       </a>
@@ -1308,27 +1320,29 @@ export default function App() {
             ))}
           </div>
 
-          <div className="pt-8 border-t border-bdr flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-xs text-gray-lt">© 2026 Opti-Link Media Group. All rights reserved.</p>
-            <div className="flex gap-8 text-xs text-gray-lt">
-              <a href="#" className="hover:text-ink transition-colors flex items-center gap-1"><ShieldCheck size={12} /> SOC 2 Type II Certified</a>
-              <a href="#" className="hover:text-ink transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-ink transition-colors">Terms of Service</a>
+          <div className="pt-8 border-t border-opti-black/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-xs text-opti-gray">© 2026 Opti-Link Media Group. All rights reserved.</p>
+            <div className="flex gap-8 text-xs text-opti-gray">
+              <a href="#" className="hover:text-opti-black transition-colors flex items-center gap-1"><ShieldCheck size={12} /> SOC 2 Type II Certified</a>
+              <a href="#" className="hover:text-opti-black transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-opti-black transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>
       </footer>
 
       <Chatbot />
-        </div>
+      </main>
       ) : (
-        <SolutionPage 
-          type={currentView} 
-          onCTA={() => {
-            setCurrentView('landing');
-            setTimeout(() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' }), 100);
-          }} 
-        />
+        <main id="main-content">
+          <SolutionPage 
+            type={currentView} 
+            onCTA={() => {
+              setCurrentView('landing');
+              setTimeout(() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' }), 100);
+            }} 
+          />
+        </main>
       )}
     </div>
   );

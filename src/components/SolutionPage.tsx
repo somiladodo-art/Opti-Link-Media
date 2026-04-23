@@ -110,7 +110,7 @@ export default function SolutionPage({ type, onCTA }: { type: string, onCTA: () 
             <div className="pt-8 border-t border-bdr-d flex flex-col sm:flex-row justify-center gap-4 w-full">
               <button 
                 onClick={onCTA}
-                className="bg-ink text-white text-base font-bold px-8 py-4 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-ink/10 flex items-center justify-center gap-2"
+                className="opti-button text-base px-8 py-4 gap-2"
               >
                 Get Started
                 <ArrowRight size={18} />

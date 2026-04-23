@@ -7,8 +7,8 @@ const AnimatedSphere = ({ dark }: { dark: boolean }) => {
   const ringRef = useRef<THREE.Mesh>(null);
 
   const color = dark ? "#ffffff" : "#000000";
-  const baseColor = dark ? "#222222" : "#e0e0e0";
-  const accentColor = "#c8f060"; // lime green
+  const baseColor = dark ? "#111111" : "#f5f5f5";
+  const accentColor = dark ? "#ffffff" : "#000000"; // Monochrome accent
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -93,7 +93,7 @@ class WebGLErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryStat
 
 const CSSFallback = ({ className, dark }: { className?: string, dark?: boolean }) => {
   const color = dark ? "border-white" : "border-ink";
-  const accentColor = "border-green";
+  const accentColor = dark ? "border-white" : "border-ink";
   
   return (
     <div className={`${className} flex items-center justify-center`} style={{ perspective: '1000px' }}>

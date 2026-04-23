@@ -52,26 +52,27 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "w-64 bg-opti-black text-opti-white flex flex-col fixed h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 border-r border-white/5",
+        "w-64 bg-opti-black text-opti-white flex flex-col fixed h-full z-40 transition-transform duration-300 ease-in-out md:translate-x-0 border-r border-white/5 pb-[env(safe-area-inset-bottom)]",
         isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
-        <div className="p-8 flex items-center justify-between border-b border-white/10">
+      )} aria-label="Sidebar navigation">
+        <div className="p-8 pt-[calc(2rem+env(safe-area-inset-top))] flex items-center justify-between border-b border-white/10">
           <div>
             <div className="text-xl font-black tracking-tight mb-1">Opti-Link</div>
             <div className="text-[10px] font-bold text-opti-green uppercase tracking-[0.2em]">Client Portal</div>
           </div>
           <button 
-            className="md:hidden text-white/50 hover:text-white transition-colors"
+            className="md:hidden text-white/50 hover:text-white transition-colors p-3 focus:outline-none focus:ring-2 focus:ring-white rounded min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close sidebar menu"
           >
-            <X size={20} />
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto" aria-label="Main components">
           {[
-            { id: 'overview', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
-            { id: 'profile', icon: <User size={18} />, label: 'Profile' },
+            { id: 'overview', icon: <LayoutDashboard size={18} aria-hidden="true" />, label: 'Dashboard' },
+            { id: 'profile', icon: <User size={18} aria-hidden="true" />, label: 'Profile' },
           ].map((item) => (
             <button 
               key={item.id} 
@@ -80,11 +81,12 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                 setIsMobileMenuOpen(false);
               }}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all",
+                "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-opti-black",
                 activeTab === item.id 
                   ? "bg-opti-green text-opti-black shadow-lg shadow-opti-green/20" 
                   : "text-white/50 hover:bg-white/5 hover:text-white"
               )}
+              aria-current={activeTab === item.id ? "page" : undefined}
             >
               {item.icon}
               {item.label}
@@ -93,25 +95,27 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-white/50 hover:bg-white/5 hover:text-white transition-all">
-            <LogOut size={18} />
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-white/50 hover:bg-white/5 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-white">
+            <LogOut size={18} aria-hidden="true" />
             Log Out
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 md:ml-64 p-6 md:p-12 w-full max-w-[100vw]">
-        <header className="flex justify-between items-start md:items-center mb-12 gap-4">
+      <main className="flex-1 md:ml-64 p-6 md:p-12 pb-[calc(2rem+env(safe-area-inset-bottom))] w-full max-w-[100vw]">
+        <header className="flex justify-between items-start md:items-center mb-12 gap-4 pt-[env(safe-area-inset-top)]">
           <div className="flex items-center gap-4">
             <button 
-              className="md:hidden p-2 -ml-2 text-opti-black hover:bg-black/5 rounded-lg transition-colors"
+              className="md:hidden p-3 -ml-3 text-opti-black hover:bg-black/5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-opti-black min-w-[44px] min-h-[44px] flex items-center justify-center"
               onClick={() => setIsMobileMenuOpen(true)}
+              aria-expanded={isMobileMenuOpen}
+              aria-label="Open sidebar menu"
             >
-              <Menu size={24} />
+              <Menu size={24} aria-hidden="true" />
             </button>
             <div>
-              <h1 className="text-2xl md:text-4xl font-black text-opti-black tracking-tight">
+              <h1 className="text-2xl md:text-4xl font-black text-opti-black tracking-tight" id="dashboard-heading">
                 {activeTab === 'overview' ? 'Performance Overview' : 'Client Profile'}
               </h1>
               <p className="text-sm text-opti-gray mt-1 hidden md:block font-medium">
@@ -119,10 +123,13 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <button className="w-10 h-10 rounded-full bg-opti-white border border-opti-black/10 flex items-center justify-center text-opti-gray hover:text-opti-black transition-colors relative shadow-sm">
-              <Bell size={18} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-opti-green rounded-full border-2 border-opti-white"></span>
+          <div className="flex items-center gap-4 md:gap-6">
+            <button 
+              className="w-11 h-11 rounded-full bg-opti-white border border-opti-black/10 flex items-center justify-center text-opti-gray hover:text-opti-black transition-colors relative shadow-sm focus:outline-none focus:ring-2 focus:ring-opti-black min-w-[44px] min-h-[44px]"
+              aria-label="View notifications"
+            >
+              <Bell size={18} aria-hidden="true" />
+              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-opti-green rounded-full border-2 border-opti-white"></span>
             </button>
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">

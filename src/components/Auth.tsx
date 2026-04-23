@@ -56,22 +56,34 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
 
     if (isLogin) {
       // Handle Login
-      const storedData = localStorage.getItem('optiLinkUser');
+      const storedData = localStorage.getItem('optiLinkUsers');
       if (!storedData) {
         setErrorMsg('No account found. Please register.');
         setIsLoading(false);
         return;
       }
-      const user = JSON.parse(storedData);
-      const passHash = simulateHash(formData.password);
       
-      if (user.email === formData.email && user.passwordHash === passHash) {
-        onLogin();
-      } else {
-        setErrorMsg('Invalid email or password.');
+      try {
+        const users = JSON.parse(storedData) || [];
+        const passHash = simulateHash(formData.password);
+        const user = users.find((u: any) => u.email === formData.email);
+        
+        if (user && user.passwordHash === passHash) {
+          onLogin();
+        } else {
+          setErrorMsg('Invalid email or password.');
+        }
+      } catch (err) {
+        setErrorMsg('Database error. Please try again.');
+        localStorage.removeItem('optiLinkUsers');
       }
     } else {
       // Handle Registration
+      if (!formData.fullName || !formData.email || !formData.username) {
+        setErrorMsg('Please fill in all fields.');
+        setIsLoading(false);
+        return;
+      }
       if (formData.password !== formData.confirmPassword) {
         setErrorMsg('Passwords do not match.');
         setIsLoading(false);
@@ -81,6 +93,23 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
         setErrorMsg('Please choose a stronger password.');
         setIsLoading(false);
         return;
+      }
+
+      const storedData = localStorage.getItem('optiLinkUsers');
+      let users = [];
+      if (storedData) {
+        try {
+          users = JSON.parse(storedData);
+        } catch (e) {
+          users = [];
+        }
+      }
+
+      const userExists = users.some((u: any) => u.email === formData.email);
+      if (userExists) {
+         setErrorMsg('Email already in use.');
+         setIsLoading(false);
+         return;
       }
 
       const passHash = simulateHash(formData.password);
@@ -93,6 +122,10 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
         memberSince: new Date().toISOString()
       };
       
+      users.push(newUser);
+      localStorage.setItem('optiLinkUsers', JSON.stringify(users));
+      
+      // Store current user for session
       localStorage.setItem('optiLinkUser', JSON.stringify(newUser));
       onLogin();
     }
@@ -103,8 +136,8 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
     <div className="min-h-screen bg-opti-white flex selection:bg-opti-green selection:text-opti-black">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex w-1/2 bg-opti-black p-12 flex-col justify-between relative overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-opti-green/20 rounded-full blur-[100px]" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-opti-green/20 rounded-full blur-[100px]" />
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-[100px]" />
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-[100px]" />
         
         <div className="relative z-10">
           <button onClick={onBack} className="text-white/50 hover:text-white flex items-center gap-2 text-sm font-bold transition-colors mb-12">
@@ -115,7 +148,7 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
 
         <div className="relative z-10">
           <h1 className="text-5xl font-black text-white tracking-tighter leading-[1.1] mb-6">
-            Your Growth<br />Dashboard,<br /><span className="text-opti-green italic">centralised.</span>
+            Your Growth<br />Dashboard,<br /><span className="text-[#B6FF3B] italic">centralised.</span>
           </h1>
           <p className="text-white/60 text-lg max-w-md leading-relaxed">
             Track Performance. Scale Faster. Data-driven results and real revenue at your fingertips.
@@ -170,22 +203,24 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
                     className="space-y-6"
                   >
                     <div className="relative group">
-                      <label className="opti-label">Full Name</label>
+                      <label htmlFor="fullName" className="opti-label">Full Name</label>
                       <div className="relative">
-                        <User className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} />
+                        <User className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} aria-hidden="true" />
                         <input
+                          id="fullName"
                           type="text" name="fullName" required value={formData.fullName} onChange={handleChange}
-                          className="opti-input pl-8" placeholder="John Doe"
+                          className="opti-input pl-8 focus:outline-none focus:ring-2 focus:ring-opti-black focus:ring-offset-1" placeholder="John Doe"
                         />
                       </div>
                     </div>
                     <div className="relative group">
-                      <label className="opti-label">Username</label>
+                      <label htmlFor="username" className="opti-label">Username</label>
                       <div className="relative">
-                        <User className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} />
+                        <User className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} aria-hidden="true" />
                         <input
+                          id="username"
                           type="text" name="username" required value={formData.username} onChange={handleChange}
-                          className="opti-input pl-8" placeholder="johndoe123"
+                          className="opti-input pl-8 focus:outline-none focus:ring-2 focus:ring-opti-black focus:ring-offset-1" placeholder="johndoe123"
                         />
                       </div>
                     </div>
@@ -193,30 +228,32 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
                 )}
 
                 <div className="relative group">
-                  <label className="opti-label">Email Address</label>
+                  <label htmlFor="email" className="opti-label">Email Address</label>
                   <div className="relative">
-                    <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} />
+                    <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} aria-hidden="true" />
                     <input
+                      id="email"
                       type="email" name="email" required value={formData.email} onChange={handleChange}
-                      className="opti-input pl-8" placeholder="name@company.com"
+                      className="opti-input pl-8 focus:outline-none focus:ring-2 focus:ring-opti-black focus:ring-offset-1" placeholder="name@company.com"
                     />
                   </div>
                 </div>
 
                 <div className="relative group">
-                  <label className="opti-label">Password</label>
+                  <label htmlFor="password" className="opti-label">Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} />
+                    <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} aria-hidden="true" />
                     <input
+                      id="password"
                       type="password" name="password" required value={formData.password} onChange={handleChange}
-                      className="opti-input pl-8" placeholder="••••••••"
+                      className="opti-input pl-8 focus:outline-none focus:ring-2 focus:ring-opti-black focus:ring-offset-1" placeholder="••••••••"
                     />
                   </div>
                   {!isLogin && formData.password.length > 0 && (
-                    <div className="mt-2">
-                      <div className="h-1.5 w-full bg-opti-lightgray rounded-full overflow-hidden flex">
+                    <div className="mt-2" aria-live="polite">
+                      <div className="h-1.5 w-full bg-opti-lightgray rounded-full overflow-hidden flex" role="progressbar" aria-valuenow={passwordStrength} aria-valuemin={0} aria-valuemax={100}>
                         <motion.div 
-                          className="h-full bg-opti-green transition-all"
+                          className="h-full bg-opti-black transition-all"
                           initial={{ width: 0 }}
                           animate={{ width: `${passwordStrength}%` }}
                         />
@@ -231,15 +268,16 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
                 {!isLogin && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
                     <div className="relative group">
-                      <label className="opti-label">Confirm Password</label>
+                      <label htmlFor="confirmPassword" className="opti-label">Confirm Password</label>
                       <div className="relative">
-                        <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} />
+                        <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-opti-gray group-focus-within:text-opti-black transition-colors" size={18} aria-hidden="true" />
                         <input
+                          id="confirmPassword"
                           type="password" name="confirmPassword" required value={formData.confirmPassword} onChange={handleChange}
-                          className="opti-input pl-8" placeholder="••••••••"
+                          className="opti-input pl-8 focus:outline-none focus:ring-2 focus:ring-opti-black focus:ring-offset-1" placeholder="••••••••"
                         />
                         {formData.confirmPassword.length > 0 && formData.password === formData.confirmPassword && (
-                          <CheckCircle2 className="absolute right-2 top-1/2 -translate-y-1/2 text-opti-success" size={18} />
+                          <CheckCircle2 className="absolute right-2 top-1/2 -translate-y-1/2 text-opti-success" size={18} aria-hidden="true" />
                         )}
                       </div>
                     </div>
@@ -266,7 +304,7 @@ export default function Auth({ onLogin, onBack }: { onLogin: () => void, onBack:
               </div>
               
               <div className="mt-12 flex items-center justify-center gap-2 text-[10px] text-opti-gray font-mono font-bold uppercase tracking-wider">
-                <ShieldCheck size={14} className="text-opti-green" />
+                <ShieldCheck size={14} className="text-opti-black" />
                 <span>End-to-End Encrypted • Secure Portal</span>
               </div>
             </motion.div>
