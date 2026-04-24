@@ -70,7 +70,7 @@ export default function SolutionPage({ type, onCTA }: { type: string, onCTA: () 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl border border-bdr-d shadow-2xl p-8 md:p-16 relative overflow-hidden"
+          className="bg-white rounded-xl border border-bdr-d shadow-2xl p-6 sm:p-8 md:p-16 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-green/10 rounded-full blur-[80px] opacity-50 pointer-events-none" />
           
@@ -83,8 +83,8 @@ export default function SolutionPage({ type, onCTA }: { type: string, onCTA: () 
               [Solutions / {type}]
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
-              {content.title.split(' ')[0]} {content.title.split(' ').length > 1 && content.title.split(' ')[1]}<br />
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-ink tracking-tighter leading-none uppercase mb-4 md:mb-6">
+              {content.title.split(' ')[0]} {content.title.split(' ').length > 1 && content.title.split(' ')[1]}<br className="hidden md:block" />
               {content.title.split(' ').length > 2 && (
                 <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">
                   {content.title.split(' ').slice(2).join(' ')}

@@ -174,7 +174,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                         {metric.trend}
                       </div>
                     </div>
-                    <div className="text-3xl font-black text-opti-black tracking-tight mb-1">{metric.value}</div>
+                    <div className="text-2xl md:text-3xl font-black text-opti-black tracking-tight mb-1">{metric.value}</div>
                     <div className="text-xs font-semibold text-opti-gray uppercase tracking-wider">{metric.label}</div>
                   </motion.div>
                 ))}

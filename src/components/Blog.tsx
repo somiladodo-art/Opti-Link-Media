@@ -143,9 +143,9 @@ export default function Blog({ onBack }: { onBack: () => void }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-5xl md:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-6">
-              INSIGHTS &<br />
-              <span className="bg-green text-ink px-4 py-1 mt-2 inline-block">STRATEGIES</span>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-ink tracking-tighter leading-none uppercase mb-4 md:mb-6">
+              INSIGHTS &<br className="hidden md:block" />
+              <span className="bg-accent text-ink px-4 py-1 mt-2 inline-block shadow-sm">STRATEGIES</span>
             </h1>
             <p className="text-xl text-gray max-w-2xl leading-relaxed">
               Expert advice, case studies, and actionable strategies to help you scale your business, automate your operations, and dominate your market.

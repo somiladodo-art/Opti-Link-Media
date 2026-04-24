@@ -540,19 +540,19 @@ export default function App() {
       </a>
       {/* Navigation */}
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6 pt-[calc(1rem+env(safe-area-inset-top))]",
-        scrolled ? "bg-opti-white/95 backdrop-blur-xl border-b border-opti-black/5 pb-4 shadow-sm" : "pb-8 pt-[calc(2rem+env(safe-area-inset-top))] bg-transparent"
+        "fixed top-0 left-0 right-0 z-[200] transition-all duration-300 px-6 pt-[calc(1.5rem+env(safe-area-inset-top))]",
+        scrolled ? "bg-opti-white/95 backdrop-blur-xl border-b border-opti-black/5 pb-5 shadow-sm" : "pb-8 pt-[calc(2.5rem+env(safe-area-inset-top))] bg-transparent"
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setCurrentView('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <Logo className="w-12 h-12 group-hover:scale-105 transition-transform duration-300" />
-            <div className="leading-none">
-              <strong className="block text-xl font-black tracking-tight text-opti-black">Opti-Link</strong>
-              <span className="block text-[0.7rem] font-bold text-opti-gray uppercase tracking-[0.2em]">Media Group</span>
+          <div className="flex items-center gap-3 cursor-pointer group shrink-0" onClick={() => { setCurrentView('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <Logo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300" />
+            <div className="leading-none hidden sm:block">
+              <strong className="block text-lg font-black tracking-tight text-opti-black">Opti-Link</strong>
+              <span className="block text-[0.65rem] font-bold text-opti-gray uppercase tracking-[0.2em]">Media Group</span>
             </div>
           </div>
           
-            <ul className="hidden md:flex items-center gap-10">
+            <ul className="hidden lg:flex items-center gap-8">
               {[
                 { name: 'Features', id: 'features' },
                 { name: 'Solutions', id: 'services', dropdown: ['Freelancers', 'Creators', 'Influencers', 'Careers', 'Academy'] },
@@ -602,10 +602,10 @@ export default function App() {
               ))}
             </ul>
 
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <button 
               onClick={() => setCurrentView('auth')}
-              className="hidden md:block text-sm font-bold text-opti-black px-5 py-2.5 hover:bg-opti-lightgray rounded-xl transition-colors"
+              className="hidden sm:block text-sm font-bold text-opti-black px-4 py-2.5 hover:bg-opti-lightgray rounded-xl transition-colors"
             >
               Client Login
             </button>
@@ -618,13 +618,13 @@ export default function App() {
                   document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="opti-button hidden md:flex min-w-[140px]"
+              className="opti-button hidden md:flex text-sm py-2.5 px-5 min-w-0"
             >
               Get Started
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-3 text-opti-black hover:bg-opti-lightgray rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-opti-black flex items-center justify-center min-w-[44px] min-h-[44px]"
+              className="lg:hidden p-3 text-opti-black hover:bg-opti-lightgray rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-opti-black flex items-center justify-center min-w-[44px] min-h-[44px]"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -709,9 +709,9 @@ export default function App() {
               Opti-Link V2.0 is Live
             </motion.div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-[100px] font-black text-opti-black tracking-tighter leading-none mb-8 w-full">
+            <h1 className="text-[10vw] sm:text-6xl md:text-7xl lg:text-[100px] font-black text-opti-black tracking-tight leading-[1.05] mb-8 w-full">
               YOUR DIGITAL INFRASTRUCTURE,<br />
-              <span className="text-ink bg-accent px-6 py-2 mt-4 inline-block rounded-lg shadow-opti-card rotate-[-1deg]">CONSTRUCTED.</span>
+              <span className="text-ink bg-accent px-4 sm:px-6 py-1 md:py-2 mt-2 md:mt-4 inline-block rounded-lg shadow-opti-card">CONSTRUCTED.</span>
             </h1>
 
             <p className="text-lg md:text-xl text-opti-gray font-medium tracking-tight mb-14 max-w-3xl leading-relaxed">
@@ -723,7 +723,7 @@ export default function App() {
                 onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })}
                 className="opti-button w-full sm:w-auto text-lg py-4 px-8 group gap-3 border-none ring-1 ring-ink/10"
               >
-                Calculate ROI <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                Get Started <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button 
                 onClick={() => setCurrentView('auth')}
@@ -737,10 +737,10 @@ export default function App() {
       </section>
 
       {/* Trusted By Section */}
-      <div className="border-y border-opti-black/5 bg-opti-lightgray py-16 md:py-20">
+      <div className="border-y border-opti-black/5 bg-opti-lightgray py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center font-mono text-xs font-bold text-opti-gray uppercase tracking-[0.3em] mb-12">Trusted by modern scaling teams globally</p>
-          <div className="flex flex-wrap justify-center items-center gap-14 md:gap-24 opacity-60 mix-blend-multiply">
+          <p className="text-center font-mono text-[10px] md:text-xs font-bold text-opti-gray uppercase tracking-[0.3em] mb-8 md:mb-12">Trusted by modern scaling teams globally</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-24 opacity-60 mix-blend-multiply">
             <div className="font-black text-2xl tracking-tighter text-opti-black">NEXUS<span className="font-light">GLOBAL</span></div>
             <div className="font-black text-2xl tracking-widest text-opti-black">AURA</div>
             <div className="font-black text-2xl tracking-tighter text-opti-black">VERTEX<span className="text-opti-black">.</span></div>
@@ -787,7 +787,7 @@ export default function App() {
 
       {/* Guarantee Bar */}
       <div className="bg-opti-white border-y border-opti-black/5 py-12 px-6">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 md:gap-12">
           {[
             { icon: <Target className="text-opti-white" />, title: 'No-Pay-Unless Model', desc: 'Zero upfront on our pilot option. Our costs are subsidized by software partners — you see results first, every time.' },
             { icon: <Rocket className="text-opti-white" />, title: 'Live in 7 Days or We Walk', desc: 'If your digital system isn\'t fully functional within 7 days, no service fees are charged. Hard deadline, every client.' },
@@ -808,7 +808,7 @@ export default function App() {
 
       {/* Services Section */}
       <Section id="services" alt>
-        <div className="grid lg:grid-cols-2 gap-12 items-end mb-16">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-end mb-12 md:mb-16">
           <div>
             <Eyebrow>What we do</Eyebrow>
             <h2 className="text-5xl md:text-7xl font-black text-opti-black tracking-tighter leading-none uppercase mb-6">
@@ -878,7 +878,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="mt-20 bg-opti-lightgray border border-opti-black/5 p-12 md:p-16 grid lg:grid-cols-[1fr_auto] gap-12 items-center relative overflow-hidden">
+        <div className="mt-16 md:mt-20 bg-opti-lightgray border border-opti-black/5 p-8 md:p-16 grid lg:grid-cols-[1fr_auto] gap-8 md:gap-12 items-center relative overflow-hidden">
           <div>
             <h3 className="text-3xl md:text-5xl font-black text-opti-black tracking-tight mb-6 leading-tight">
               The free pilot model —<br />how it actually works.
@@ -1085,7 +1085,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="p-12">
+                  <div className="p-8 md:p-12">
                     <div className="space-y-8">
                       <div>
                         <h3 className="text-2xl font-black text-opti-black tracking-tight mb-2">
@@ -1156,7 +1156,7 @@ export default function App() {
                   key="squeeze"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-10 text-center"
+                  className="p-6 md:p-10 text-center"
                 >
                   <div className="w-24 h-24 rounded-full border-2 border-opti-black/20 flex flex-col items-center justify-center mx-auto mb-6">
                     <span className="text-4xl font-black text-ink bg-accent px-2 py-1 tracking-tighter leading-none shadow-sm">{totalScore}</span>
@@ -1242,7 +1242,7 @@ export default function App() {
                   key="thanks"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-16 text-center"
+                  className="p-8 md:p-16 text-center"
                 >
                   <div className="w-20 h-20 rounded-full bg-opti-black text-opti-white border-2 border-ink/20 flex items-center justify-center mx-auto mb-8 text-opti-black">
                     <Check size={40} />
@@ -1281,9 +1281,9 @@ export default function App() {
       </Section>
 
       {/* Footer */}
-      <footer className="bg-white pt-24 pb-[calc(3rem+env(safe-area-inset-bottom))] px-6 border-t border-opti-black/5">
+      <footer className="bg-white pt-16 md:pt-24 pb-[calc(3rem+env(safe-area-inset-bottom))] px-6 border-t border-opti-black/5">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 mb-12 md:mb-20">
             <div>
               <div className="flex items-center gap-4 mb-8">
                 <Logo className="w-16 h-16" />
@@ -1321,8 +1321,8 @@ export default function App() {
           </div>
 
           <div className="pt-8 border-t border-opti-black/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-xs text-opti-gray">© 2026 Opti-Link Media Group. All rights reserved.</p>
-            <div className="flex gap-8 text-xs text-opti-gray">
+            <p className="text-xs text-opti-gray text-center md:text-left">© 2026 Opti-Link Media Group. All rights reserved.</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs text-opti-gray">
               <a href="#" className="hover:text-opti-black transition-colors flex items-center gap-1"><ShieldCheck size={12} /> SOC 2 Type II Certified</a>
               <a href="#" className="hover:text-opti-black transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-opti-black transition-colors">Terms of Service</a>
